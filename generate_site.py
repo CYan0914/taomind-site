@@ -12,7 +12,7 @@ import re
 import shutil
 import sys
 
-LIBRARY_PATH = r"C:\Users\Cyan\Desktop\taomind-Streamlit\library_content.py"
+LIBRARY_PATH = r"D:\projects\taomind-Streamlit\library_content.py"
 ICON_PATH = r"C:\Users\Cyan\Desktop\TaoMind-iOS\Resources\Assets.xcassets\AppIcon.appiconset\AppIcon.png"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -65,6 +65,25 @@ def render_commentary(text):
     paras = [ln.strip() for ln in lines]
     paras = [p for p in paras if p]
     return "\n".join(f"<p>{p}</p>" for p in paras)
+
+
+def teaser(text, max_chars=160):
+    """精讲导读：截取 commentary 开头到句号边界的一两句话，作为免费预览。
+
+    完整精讲是 App 的 Pro 卖点，网页只给一句导读引流下载，保护 App 付费墙。
+    """
+    if not text:
+        return ""
+    plain = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+    plain = re.sub(r"  \n", " ", plain).replace("\n", " ")
+    plain = " ".join(plain.split())
+    if len(plain) <= max_chars:
+        return esc(plain)
+    cut = plain[:max_chars]
+    # 在最近的句子边界（。！？.!)）处截断，避免半句
+    m = re.search(r"[。！？.!?]", cut[::-1])
+    end = max_chars - (m.start() + 1) if m else max_chars
+    return esc(plain[:end].rstrip()) + "……"
 
 
 def json_ld(page_title, description, canonical, date_published="2026-08-15"):
@@ -174,10 +193,11 @@ def build_chapter_page(c, prev_c=None, next_c=None):
     meta = SOURCE_META[source]
     zh = zh_label(source, num)
 
-    title = f"{meta['title']} Chapter {num}: Full Text, Meaning & Commentary | {APP_NAME}"
+    title = f"{meta['title']} Chapter {num}: Full Text & Meaning | {APP_NAME}"
     verse_first = c["verse_text"]
-    description = (f"Read {esc(meta['title'])} Chapter {num} with plain-language commentary. "
-                   f"{verse_first[:110]}")
+    description = (f"Read the original {meta['title']} Chapter {num} with a one-line insight. "
+                   f"Get {APP_NAME} for the full plain-language commentary, reflection and daily practice. "
+                   f"{verse_first[:80]}")
     canonical = chapter_canonical(source, num)
 
     prev_link, next_link = "", ""
@@ -189,8 +209,7 @@ def build_chapter_page(c, prev_c=None, next_c=None):
         next_link = f'<a class="next" href="chapter-{nn}.html">{esc(next_c["chapter"])} →</a>'
 
     verse_html = esc(c["verse_text"])
-    commentary_html = render_commentary(c["commentary"])
-    reflection_html = esc(c["reflection"])
+    intro = teaser(c["commentary"])
 
     body = f"""<div class="container">
 <header class="site">
@@ -200,17 +219,15 @@ def build_chapter_page(c, prev_c=None, next_c=None):
 <p class="crumb"><a href="{BASE_REL}index.html">Home</a> › <a href="{BASE_REL}{slug}/index.html">{meta['title']}</a> › Chapter {num}</p>
 <h1>{meta['title']} Chapter {num} <span class="zh-tag">· {esc(zh)}</span></h1>
 <blockquote class="verse">{verse_html}</blockquote>
-<h2>白话精讲 · Plain-language Commentary</h2>
-<div class="commentary">{commentary_html}</div>
-<h2>Reflection</h2>
-<p class="reflect">{reflection_html}</p>
+<h2>导读 · In brief</h2>
+<p class="reflect">{intro}</p>
+<div class="cta">
+  <a class="btn" href="{APP_URL}">Read the full commentary in {APP_NAME} →</a>
+  <p>The complete plain-language commentary, reflection and daily practice are in the {APP_NAME} app.</p>
+</div>
 <div class="pager">
   {prev_link}
   {next_link}
-</div>
-<div class="cta">
-  <a class="btn" href="{APP_URL}">Get one verse a day with {APP_NAME} →</a>
-  <p>Daily Tao Te Ching verses, reflections and journaling.</p>
 </div>
 <footer class="site">
   <span>© 2026 {APP_NAME}</span>
@@ -227,7 +244,7 @@ def build_index(content):
 
     hero = """<div class="hero">
 <h1>Daily Tao Te Ching &amp; Diamond Sutra — Read, Reflect, Grow</h1>
-<p>113 chapters, each with the original verse, a plain-language commentary (白话精讲) and a reflection question. Free to read; get the app for a verse a day.</p>
+<p>113 chapters, each with the original verse and a one-line insight. Free to read on the web; get the app for the full plain-language commentary, reflection and daily practice.</p>
 </div>"""
 
     groups_html = []
@@ -262,7 +279,7 @@ def build_index(content):
 </div>"""
     return page_shell(
         f"{APP_NAME} — Daily Tao Te Ching & Diamond Sutra, Verse by Verse",
-        "Read all 81 chapters of the Tao Te Ching and 32 sections of the Diamond Sutra with plain-language commentary and daily reflection questions.",
+        "Read all 81 chapters of the Tao Te Ching and 32 sections of the Diamond Sutra. Get the TaoMind app for the full plain-language commentary and daily practice.",
         SITE_URL,
         body,
     )
@@ -289,8 +306,8 @@ def build_source_index(source, items):
 </div>
 </div>"""
     return page_shell(
-        f"{meta['title']} — All {len(items)} Chapters, Explained | {APP_NAME}",
-        f"Read and understand all {len(items)} chapters of the {meta['title']} ({meta['zh']}) with plain-language commentary.",
+        f"{meta['title']} — All {len(items)} Chapters | {APP_NAME}",
+        f"Read all {len(items)} chapters of the {meta['title']} ({meta['zh']}). Get the TaoMind app for the full plain-language commentary and daily practice.",
         SITE_URL + slugify_source(source) + "/",
         body,
     )
