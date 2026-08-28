@@ -20,7 +20,7 @@ OUT_DIR = os.path.join(BASE_DIR, "site")
 SITE_URL = "https://cyan0914.github.io/taomind-site/"
 
 APP_NAME = "TaoMind"
-APP_URL = "https://apps.apple.com/app/id6800654302"
+APP_URL = "https://apps.apple.com/app/id6792008756"
 
 SOURCE_META = {
     "Tao Te Ching": {"slug": "tao-te-ching", "zh": "道德经", "zhUnit": "章", "title": "Tao Te Ching"},
