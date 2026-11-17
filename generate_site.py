@@ -244,6 +244,7 @@ def build_chapter_page(c, prev_c=None, next_c=None, seq=0, total=0):
         h1 = f"{meta['title']} Chapter {num} <span class=\"zh-tag\">· {esc(zh)}</span>"
         crumb_tail = f"Chapter {num}"
     else:
+        # 中文经部（感应篇/清静经/列子/庄子）：chapter 名本身即标题
         title = f"{esc(ch)} · {meta['zh']}原文精讲 | {APP_NAME}"
         description = (f"{meta['zh']}{ch}原文 + 一句导读。"
                        f"完整白话精讲、反思与每日修习在 {APP_NAME} App。"
