@@ -12,7 +12,7 @@ import re
 import shutil
 import sys
 
-LIBRARY_PATH = r"D:\projects\taomind-Streamlit\library_content.py"
+LIBRARY_PATH = r"D:\projects\taomind-Streamlit\library_content.py"  # 保留兼容：实际走 LIB_DIR + SOURCE_FILES
 ICON_PATH = r"C:\Users\Cyan\Desktop\TaoMind-iOS\Resources\Assets.xcassets\AppIcon.appiconset\AppIcon.png"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,17 +22,56 @@ SITE_URL = "https://cyan0914.github.io/taomind-site/"
 APP_NAME = "TaoMind"
 APP_URL = "https://apps.apple.com/app/id6792008756"
 
+LIB_DIR = r"D:\projects\taomind-Streamlit"
+
 SOURCE_META = {
     "Tao Te Ching": {"slug": "tao-te-ching", "zh": "道德经", "zhUnit": "章", "title": "Tao Te Ching"},
     "Diamond Sutra": {"slug": "diamond-sutra", "zh": "金刚经", "zhUnit": "品", "title": "Diamond Sutra"},
+    "太上感应篇": {"slug": "ganying", "zh": "太上感应篇", "zhUnit": "章", "title": "太上感应篇"},
+    "清静经": {"slug": "qingjing", "zh": "清静经", "zhUnit": "章", "title": "清静经"},
+    "列子": {"slug": "liezi", "zh": "列子", "zhUnit": "篇", "title": "列子"},
+    "庄子": {"slug": "zhuangzi", "zh": "庄子", "zhUnit": "篇", "title": "庄子"},
+}
+
+# source -> (文件名, 变量名)。display_order 即文件内顺序，用作 URL 编号。
+SOURCE_FILES = {
+    "Tao Te Ching": ("library_content.py", "LIBRARY_CONTENT"),
+    "Diamond Sutra": ("library_content.py", "LIBRARY_CONTENT"),
+    "太上感应篇": ("library_ganying.py", "TAISHANG_GANYING"),
+    "清静经": ("library_other.py", "LIBRARY_OTHER"),
+    "列子": ("library_other.py", "LIBRARY_OTHER"),
+    "庄子": ("library_zhuangzi.py", "LIBRARY_ZHUANGZI"),
 }
 
 
 def load_content():
-    ns = {}
-    src = io.open(LIBRARY_PATH, encoding="utf-8").read()
-    exec(compile(src, "library_content.py", "exec"), ns)
-    return ns["LIBRARY_CONTENT"]
+    out = []
+    cache = {}
+    for source, (fname, var) in SOURCE_FILES.items():
+        if fname not in cache:
+            ns = {}
+            src = io.open(os.path.join(LIB_DIR, fname), encoding="utf-8").read()
+            exec(compile(src, fname, "exec"), ns)
+            cache[fname] = ns
+        for c in cache[fname][var]:
+            if c.get("source") == source:
+                out.append(c)
+    return out
+
+
+def entry_seq(c):
+    """URL 与排序用的序号：display_order 在该 source 内的第几条（1-based）。
+    感应篇/庄子等中文 chapter 名里没有数字，不能用 chapter_num。"""
+    try:
+        return int(c.get("display_order") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def seq_list(source, content):
+    items = [c for c in content if c.get("source") == source]
+    items.sort(key=entry_seq)
+    return items
 
 
 def esc(t):
@@ -186,38 +225,54 @@ def chapter_canonical(source, num):
     return SITE_URL + chapter_url(source, num)
 
 
-def build_chapter_page(c, prev_c=None, next_c=None):
+def build_chapter_page(c, prev_c=None, next_c=None, seq=0, total=0):
     source = c["source"]
-    num = chapter_num(c["chapter"])
     slug = slugify_source(source)
     meta = SOURCE_META[source]
-    zh = zh_label(source, num)
+    ch = c.get("chapter") or ""
+    ch_en = c.get("chapter_en") or ""
+    num = chapter_num(ch)
+    seq_label = seq or num or 0
 
-    title = f"{meta['title']} Chapter {num}: Full Text & Meaning | {APP_NAME}"
-    verse_first = c["verse_text"]
-    description = (f"Read the original {meta['title']} Chapter {num} with a one-line insight. "
-                   f"Get {APP_NAME} for the full plain-language commentary, reflection and daily practice. "
-                   f"{verse_first[:80]}")
-    canonical = chapter_canonical(source, num)
+    is_en = source in ("Tao Te Ching", "Diamond Sutra")
+    if is_en:
+        zh = zh_label(source, num)
+        title = f"{meta['title']} Chapter {num}: Full Text & Meaning | {APP_NAME}"
+        description = (f"Read the original {meta['title']} Chapter {num} with a one-line insight. "
+                       f"Get {APP_NAME} for the full plain-language commentary, reflection and daily practice. "
+                       f"{(c.get('verse_text') or '')[:80]}")
+        h1 = f"{meta['title']} Chapter {num} <span class=\"zh-tag\">· {esc(zh)}</span>"
+        crumb_tail = f"Chapter {num}"
+    else:
+        title = f"{esc(ch)} · {meta['zh']}原文精讲 | {APP_NAME}"
+        description = (f"{meta['zh']}{ch}原文 + 一句导读。"
+                       f"完整白话精讲、反思与每日修习在 {APP_NAME} App。"
+                       f"{(c.get('verse_text') or '')[:80]}")
+        h1 = f"{esc(ch)} <span class=\"zh-tag\">· {esc(meta['zh'])}</span>"
+        if ch_en:
+            h1 += f"<br><span class=\"zh-tag\">{esc(ch_en)}</span>"
+        crumb_tail = ch
+    canonical = chapter_canonical(source, seq_label)
 
     prev_link, next_link = "", ""
     if prev_c:
-        pn = chapter_num(prev_c["chapter"])
-        prev_link = f'<a href="chapter-{pn}.html">← {esc(prev_c["chapter"])}</a>'
+        pn = entry_seq(prev_c)
+        prev_link = f'<a href="chapter-{pn}.html">← {esc(prev_c.get("chapter") or "")}</a>'
     if next_c:
-        nn = chapter_num(next_c["chapter"])
-        next_link = f'<a class="next" href="chapter-{nn}.html">{esc(next_c["chapter"])} →</a>'
+        nn = entry_seq(next_c)
+        next_link = f'<a class="next" href="chapter-{nn}.html">{esc(next_c.get("chapter") or "")} →</a>'
 
-    verse_html = esc(c["verse_text"])
-    intro = teaser(c["commentary"])
+    verse_html = esc(c.get("verse_text") or "")
+    intro = teaser(c.get("commentary"))
 
+    footer_total = f"All {total} chapters" if total else "All chapters"
     body = f"""<div class="container">
 <header class="site">
   <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
   <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
 </header>
-<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › <a href="{BASE_REL}{slug}/index.html">{meta['title']}</a> › Chapter {num}</p>
-<h1>{meta['title']} Chapter {num} <span class="zh-tag">· {esc(zh)}</span></h1>
+<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › <a href="{BASE_REL}{slug}/index.html">{meta['title']}</a> › {esc(crumb_tail)}</p>
+<h1>{h1}</h1>
 <blockquote class="verse">{verse_html}</blockquote>
 <h2>导读 · In brief</h2>
 <p class="reflect">{intro}</p>
@@ -231,7 +286,7 @@ def build_chapter_page(c, prev_c=None, next_c=None):
 </div>
 <footer class="site">
   <span>© 2026 {APP_NAME}</span>
-  <span><a href="{BASE_REL}index.html">All 113 chapters</a></span>
+  <span><a href="{BASE_REL}index.html">{footer_total}</a></span>
 </footer>
 </div>"""
     return page_shell(title, description, canonical, body)
@@ -242,20 +297,27 @@ def build_index(content):
     for c in content:
         groups.setdefault(c["source"], []).append(c)
 
-    hero = """<div class="hero">
+    total = sum(len(v) for v in groups.values())
+    hero = f"""<div class="hero">
 <h1>Daily Tao Te Ching &amp; Diamond Sutra — Read, Reflect, Grow</h1>
-<p>113 chapters, each with the original verse and a one-line insight. Free to read on the web; get the app for the full plain-language commentary, reflection and daily practice.</p>
+<h2 class="zh-hero">把《道德经》变成每天能用的一句话</h2>
+<p>{total} chapters, each with the original verse and a one-line insight. Free to read on the web; get the app for the full plain-language commentary, reflection and daily practice.<br>写下你卡住的事，给你对症的那章经文、一段白话和今天就能做的一件事。</p>
 </div>"""
 
     groups_html = []
-    for source in ["Tao Te Ching", "Diamond Sutra"]:
-        items = groups.get(source, [])
-        items.sort(key=lambda c: chapter_num(c["chapter"]) or 0)
+    for source in SOURCE_META:
+        items = seq_list(source, content)
+        if not items:
+            continue
         meta = SOURCE_META[source]
         links = []
         for c in items:
-            num = chapter_num(c["chapter"])
-            links.append(f'<a href="{chapter_url(source, num)}">{meta["title"]} Chapter {num}</a>')
+            seq = entry_seq(c)
+            if source in ("Tao Te Ching", "Diamond Sutra"):
+                label = f"{meta['title']} Chapter {chapter_num(c.get('chapter'))}"
+            else:
+                label = c.get("chapter") or f"{meta['zh']} {seq}"
+            links.append(f'<a href="{chapter_url(source, seq)}">{esc(label)}</a>')
         groups_html.append(
             f'<div class="list-group"><h3>{esc(meta["title"])} · {esc(meta["zh"])} ({len(items)} {meta["zhUnit"]})</h3>'
             f'<div class="grid">{"".join(links)}</div></div>'
@@ -278,8 +340,8 @@ def build_index(content):
 </footer>
 </div>"""
     return page_shell(
-        f"{APP_NAME} — Daily Tao Te Ching & Diamond Sutra, Verse by Verse",
-        "Read all 81 chapters of the Tao Te Ching and 32 sections of the Diamond Sutra. Get the TaoMind app for the full plain-language commentary and daily practice.",
+        f"{APP_NAME} — 道德经 / 金刚经 / 感应篇 / 庄子原文精讲 · Daily Wisdom, Verse by Verse",
+        "道德经 81 章、金刚经 32 品、太上感应篇、庄子精选原文 + 一句导读，中英双语。完整白话精讲与每日修习在 TaoMind App。",
         SITE_URL,
         body,
     )
@@ -287,18 +349,26 @@ def build_index(content):
 
 def build_source_index(source, items):
     meta = SOURCE_META[source]
-    items.sort(key=lambda c: chapter_num(c["chapter"]) or 0)
+    items = seq_list(source, items)
     links = []
     for c in items:
-        num = chapter_num(c["chapter"])
-        links.append(f'<a href="chapter-{num}.html">{meta["title"]} Chapter {num}</a>')
+        seq = entry_seq(c)
+        if source in ("Tao Te Ching", "Diamond Sutra"):
+            label = f"{meta['title']} Chapter {chapter_num(c.get('chapter'))}"
+        else:
+            label = c.get("chapter") or f"{meta['zh']} {seq}"
+        links.append(f'<a href="chapter-{seq}.html">{esc(label)}</a>')
+    if source in ("Tao Te Ching", "Diamond Sutra"):
+        h1 = f"{meta['title']} — All {len(items)} Chapters <span class=\"zh-tag\">· {esc(meta['zh'])}</span>"
+    else:
+        h1 = f"{esc(meta['zh'])} · 全 {len(items)} {meta['zhUnit']} <span class=\"zh-tag\">· {esc(meta['title'])}</span>"
     body = f"""<div class="container">
 <header class="site">
   <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
   <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
 </header>
 <p class="crumb"><a href="{BASE_REL}index.html">Home</a> › {meta['title']}</p>
-<h1>{meta['title']} — All {len(items)} Chapters <span class="zh-tag">· {esc(meta['zh'])}</span></h1>
+<h1>{h1}</h1>
 <div class="grid">{"".join(links)}</div>
 <div class="cta">
   <a class="btn" href="{APP_URL}">Get one verse a day with {APP_NAME} →</a>
@@ -306,8 +376,8 @@ def build_source_index(source, items):
 </div>
 </div>"""
     return page_shell(
-        f"{meta['title']} — All {len(items)} Chapters | {APP_NAME}",
-        f"Read all {len(items)} chapters of the {meta['title']} ({meta['zh']}). Get the TaoMind app for the full plain-language commentary and daily practice.",
+        f"{meta['zh']} · 全 {len(items)} {meta['zhUnit']}原文精讲 | {APP_NAME}",
+        f"{meta['zh']}全 {len(items)} {meta['zhUnit']}原文 + 一句导读。完整白话精讲与每日修习在 TaoMind App。",
         SITE_URL + slugify_source(source) + "/",
         body,
     )
@@ -329,12 +399,12 @@ def main():
     with io.open(os.path.join(OUT_DIR, "index.html"), "w", encoding="utf-8") as f:
         f.write(build_index(content))
 
-    # per-source ordering for prev/next (natural chapter order)
+    # per-source ordering for prev/next: display_order 在该 source 内的顺序
     by_source = {}
     for c in content:
         by_source.setdefault(c["source"], []).append(c)
     for source, items in by_source.items():
-        items.sort(key=lambda c: chapter_num(c["chapter"]) or 0)
+        items.sort(key=entry_seq)
 
     urls = []
 
@@ -345,16 +415,16 @@ def main():
             f.write(build_source_index(source, items))
         urls.append(SITE_URL + slugify_source(source) + "/")
 
-        for c in items:
-            num = chapter_num(c["chapter"])
-            fn = os.path.join(sub, f"chapter-{num}.html")
-            idx = items.index(c)
+        # 该 source 内第几条（1-based）就是 URL 编号，保证同一 source 内唯一连续
+        for idx, c in enumerate(items):
+            seq = idx + 1
+            fn = os.path.join(sub, f"chapter-{seq}.html")
             prev_c = items[idx - 1] if idx > 0 else None
             next_c = items[idx + 1] if idx < len(items) - 1 else None
-            html_page = build_chapter_page(c, prev_c, next_c)
+            html_page = build_chapter_page(c, prev_c, next_c, seq=seq, total=len(items))
             with io.open(fn, "w", encoding="utf-8") as f:
                 f.write(html_page)
-            urls.append(chapter_canonical(source, num))
+            urls.append(chapter_canonical(source, seq))
 
     # sitemap
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
