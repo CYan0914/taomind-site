@@ -330,6 +330,11 @@ def build_index(content):
   <nav class="top"><a href="{APP_URL}">Get the App</a></nav>
 </header>
 {hero}
+<div class="list-group"><h3>困住的时候 · When You Are Stuck</h3>
+<p class="sub-pain">睡不着、焦虑、想辞职、失恋、拖延——每个具体处境，都有一章对得上。</p>
+<div class="grid">
+  <a href="{BASE_REL}problems/anxiety.html">焦虑</a><a href="{BASE_REL}problems/cant-sleep.html">睡不着</a><a href="{BASE_REL}problems/quit-job.html">想辞职</a><a href="{BASE_REL}problems/heartbreak.html">失恋</a><a href="{BASE_REL}problems/procrastination.html">拖延</a><a href="{BASE_REL}problems/burnout.html">撑不住</a><a href="{BASE_REL}problems/comparison.html">爱比较</a><a href="{BASE_REL}problems/index.html">全部 20 个 →</a>
+</div></div>
 {''.join(groups_html)}
 <div class="cta">
   <a class="btn" href="{APP_URL}">Get one verse a day with {APP_NAME} →</a>
@@ -384,8 +389,86 @@ def build_source_index(source, items):
     )
 
 
+def build_problem_page(p, ttc_by_num, all_problems):
+    """问题型落地页：用户搜的是处境，不是章号。
+
+    结构：处境标题 → 共鸣 → 经文 → 老子怎么说 → 今天做一件事 → 下载。
+    经文原文来自公共领域通行本；解读自写，不搬学者译文。
+    """
+    num = p["chapter"]
+    entry = ttc_by_num.get(num) or {}
+    verse = (entry.get("verse_text") or "").strip()
+    ch_name = entry.get("chapter") or f"第{num}章"
+
+    canonical = SITE_URL + f"problems/{p['slug']}.html"
+    title = f"{p['h1']}｜道德经第{num}章怎么说 | {APP_NAME}"
+    description = f"{p['pain']}《道德经》{ch_name}给的答案：{p['quote_note']}。"
+
+    # 同类问题互链，提高站内爬取与停留
+    others = [x for x in all_problems if x["slug"] != p["slug"]][:6]
+    other_links = "".join(
+        f'<a href="{x["slug"]}.html">{esc(x["h1"])}</a>' for x in others
+    )
+
+    body = f"""<div class="container">
+<header class="site">
+  <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
+  <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
+</header>
+<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › 困住的时候</p>
+<h1>{esc(p['h1'])}</h1>
+<p class="sub-pain">{esc(p['pain'])}</p>
+<blockquote class="verse">{esc(verse)}<span class="verse-src">——《道德经》{esc(ch_name)}</span></blockquote>
+<h2>老子怎么说</h2>
+<div class="commentary"><p>{esc(p['insight'])}</p></div>
+<div class="keyline">{esc(p['quote_note'])}</div>
+<h2>今天可以做的一件事</h2>
+<div class="action-box">{esc(p['action'])}</div>
+<div class="cta">
+  <a class="btn" href="{APP_URL}">把这个方法装进手机 →</a>
+  <p>{APP_NAME}：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</p>
+</div>
+<div class="list-group">
+  <h3>也许你还在困扰</h3>
+  <div class="grid">{other_links}</div>
+</div>
+<footer class="site">
+  <span>© 2026 {APP_NAME}</span>
+  <span><a href="{BASE_REL}index.html">全部经文</a></span>
+</footer>
+</div>"""
+    return page_shell(title, description, canonical, body)
+
+
+def build_problems_index(problems):
+    links = "".join(
+        f'<a href="{p["slug"]}.html">{esc(p["h1"])}</a>' for p in problems
+    )
+    body = f"""<div class="container">
+<header class="site">
+  <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
+  <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
+</header>
+<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › 困住的时候</p>
+<h1>困住的时候，古人怎么说</h1>
+<p class="sub-pain">睡不着、想辞职、放不下、怕失败——每一个具体处境，都有一章经文对得上。</p>
+<div class="grid">{links}</div>
+<div class="cta">
+  <a class="btn" href="{APP_URL}">写下你的处境，让 {APP_NAME} 给你找那一章 →</a>
+  <p>道德经 81 章 + 金刚经 32 品，中英双语，每日一签。</p>
+</div>
+</div>"""
+    return page_shell(
+        f"困住的时候，古人怎么说 | {APP_NAME}",
+        "睡不着、焦虑、想辞职、失恋、拖延、职场压力——每个具体处境对应一章《道德经》，原文 + 一句解读 + 今天能做的一件事。",
+        SITE_URL + "problems/",
+        body,
+    )
+
+
 def main():
     content = load_content()
+    from problems_data import PROBLEMS
     try:
         if os.path.isdir(OUT_DIR):
             shutil.rmtree(OUT_DIR)
@@ -426,6 +509,21 @@ def main():
             with io.open(fn, "w", encoding="utf-8") as f:
                 f.write(html_page)
             urls.append(chapter_canonical(source, seq))
+
+    # 问题型落地页：/problems/
+    ttc_by_num = {
+        int(c.get("display_order") or 0): c
+        for c in content if c.get("source") == "Tao Te Ching"
+    }
+    prob_dir = os.path.join(OUT_DIR, "problems")
+    os.makedirs(prob_dir, exist_ok=True)
+    with io.open(os.path.join(prob_dir, "index.html"), "w", encoding="utf-8") as f:
+        f.write(build_problems_index(PROBLEMS))
+    urls.append(SITE_URL + "problems/")
+    for p in PROBLEMS:
+        with io.open(os.path.join(prob_dir, p["slug"] + ".html"), "w", encoding="utf-8") as f:
+            f.write(build_problem_page(p, ttc_by_num, PROBLEMS))
+        urls.append(SITE_URL + "problems/" + p["slug"] + ".html")
 
     # sitemap
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
