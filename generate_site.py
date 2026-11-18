@@ -17,7 +17,7 @@ ICON_PATH = r"C:\Users\Cyan\Desktop\TaoMind-iOS\Resources\Assets.xcassets\AppIco
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(BASE_DIR, "site")
-SITE_URL = "https://cyan0914.github.io/taomind-site/"
+SITE_URL = "https://library.taomindapp.com/"
 
 APP_NAME = "TaoMind"
 APP_URL = "https://apps.apple.com/app/id6792008756"
@@ -552,6 +552,12 @@ def main():
     # .nojekyll for GitHub Pages
     with io.open(os.path.join(OUT_DIR, ".nojekyll"), "w", encoding="utf-8") as f:
         f.write("")
+
+    # CNAME：GitHub Pages 自定义域。必须每次生成都写 —— main() 开头会 rmtree(site)，
+    # 手动放进去的 CNAME 下一次生成就没了，Pages 会掉回 github.io 域。
+    # 与仓库 Settings → Pages 里的 Custom domain 互为双保险。
+    with io.open(os.path.join(OUT_DIR, "CNAME"), "w", encoding="utf-8") as f:
+        f.write("library.taomindapp.com\n")
 
     print(f"Generated {len(content)} chapter pages + index + sitemap in {OUT_DIR}")
 

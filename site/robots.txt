@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cyan0914.github.io/taomind-site/sitemap.xml
+Sitemap: https://library.taomindapp.com/sitemap.xml
