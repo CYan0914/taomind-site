@@ -1,24 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Diamond Sutra Chapter None: Full Text &amp; Meaning | TaoMind</title>
-<meta name="description" content="Read the original Diamond Sutra Chapter None with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 须菩提白佛言：‘世尊！颇有众生，得闻如是言说章句，生实信不？’佛告须菩提：‘莫作是说！如来灭后，后五百岁，有持戒修福者，于此章句，能生信心，以此为实。当知是人，" />
-<link rel="canonical" href="https://library.taomindapp.com/diamond-sutra/chapter-6.html" />
+<title>Diamond Sutra Chapter 6: Full Text &amp; Meaning | TaoMind</title>
+<meta name="description" content="Read the original Diamond Sutra Chapter 6 with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 须菩提白佛言：‘世尊！颇有众生，得闻如是言说章句，生实信不？’佛告须菩提：‘莫作是说！如来灭后，后五百岁，有持戒修福者，于此章句，能生信心，以此为实。当知是人，" />
+<link rel="canonical" href="https://www.taomindapp.com/library/diamond-sutra/chapter-6.html" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Diamond Sutra Chapter None: Full Text &amp; Meaning | TaoMind" />
-<meta property="og:description" content="Read the original Diamond Sutra Chapter None with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 须菩提白佛言：‘世尊！颇有众生，得闻如是言说章句，生实信不？’佛告须菩提：‘莫作是说！如来灭后，后五百岁，有持戒修福者，于此章句，能生信心，以此为实。当知是人，" />
-<meta property="og:url" content="https://library.taomindapp.com/diamond-sutra/chapter-6.html" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:title" content="Diamond Sutra Chapter 6: Full Text &amp; Meaning | TaoMind" />
+<meta property="og:description" content="Read the original Diamond Sutra Chapter 6 with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 须菩提白佛言：‘世尊！颇有众生，得闻如是言说章句，生实信不？’佛告须菩提：‘莫作是说！如来灭后，后五百岁，有持戒修福者，于此章句，能生信心，以此为实。当知是人，" />
+<meta property="og:url" content="https://www.taomindapp.com/library/diamond-sutra/chapter-6.html" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Diamond Sutra Chapter None: Full Text & Meaning | TaoMind",
-  "description": "Read the original Diamond Sutra Chapter None with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 须菩提白佛言：‘世尊！颇有众生，得闻如是言说章句，生实信不？’佛告须菩提：‘莫作是说！如来灭后，后五百岁，有持戒修福者，于此章句，能生信心，以此为实。当知是人，",
+  "headline": "Diamond Sutra Chapter 6: Full Text & Meaning | TaoMind",
+  "description": "Read the original Diamond Sutra Chapter 6 with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 须菩提白佛言：‘世尊！颇有众生，得闻如是言说章句，生实信不？’佛告须菩提：‘莫作是说！如来灭后，后五百岁，有持戒修福者，于此章句，能生信心，以此为实。当知是人，",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/diamond-sutra/chapter-6.html"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/diamond-sutra/chapter-6.html"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,30 +65,37 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › <a href="diamond-sutra/index.html">Diamond Sutra</a> › Chapter None</p>
-<h1>Diamond Sutra Chapter None <span class="zh-tag">· 金刚经 第None品</span></h1>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <a href="../diamond-sutra/index.html"><span class="zh">金刚经</span><span class="en">Diamond Sutra</span></a> › <span class="zh">第6品</span><span class="en">Chapter 6</span></p>
+<h1><span class="zh">金刚经 第6品</span><span class="en">Diamond Sutra Chapter 6</span></h1>
 <blockquote class="verse">须菩提白佛言：‘世尊！颇有众生，得闻如是言说章句，生实信不？’佛告须菩提：‘莫作是说！如来灭后，后五百岁，有持戒修福者，于此章句，能生信心，以此为实。当知是人，不于一佛、二佛、三四五佛而种善根，已于无量千万佛所种诸善根。闻是章句，乃至一念生净信者；须菩提！如来悉知悉见，是诸众生得如是无量福德。何以故？是诸众生，无复我相、人相、众生相、寿者相、无法相，亦无非法相。何以故？是诸众生若心取相，即为著我、人、众生、寿者。若取法相，即著我、人、众生、寿者。何以故？若取非法相，即著我、人、众生、寿者。是故不应取法，不应取非法。以是义故，如来常说：汝等比丘！知我说法，如筏喻者；法尚应舍，何况非法？’</blockquote>
-<h2>导读 · In brief</h2>
+<h2><span class="zh">导读</span><span class="en">In brief</span></h2>
 <p class="reflect">别把话当真，更别被话困住——道理是渡河的船，过了岸就该扔掉，死抱着船反而划不动了。 比如开会时别纠结“他是不是在针对我”，先理清问题本质；争论输赢没用，关键看行动是否真的解决问题。</p>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">Read the full commentary in TaoMind →</a>
-  <p>The complete plain-language commentary, reflection and daily practice are in the TaoMind app.</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">在 TaoMind 读完整精讲 →</span><span class="en">Read the full commentary in TaoMind →</span></a>
+  <p><span class="zh">完整白话精讲、反思与每日修习都在 TaoMind App。</span><span class="en">The complete plain-language commentary, reflection and daily practice are in the TaoMind app.</span></p>
 </div>
 <div class="pager">
-  <a href="chapter-86.html">← 第五品 如理实见分</a>
-  <a class="next" href="chapter-88.html">第七品 无得无说分 →</a>
+  <a href="chapter-86.html">← <span class="zh">第五品 如理实见分</span><span class="en">Chapter 5</span></a>
+  <a class="next" href="chapter-88.html"><span class="zh">第七品 无得无说分</span><span class="en">Chapter 7</span> →</a>
 </div>
 <footer class="site">
   <span>© 2026 TaoMind</span>
-  <span><a href="index.html">All 32 chapters</a></span>
+  <span><a href="../index.html"><span class="zh">全部 32 品</span><span class="en">All 32 chapters</span></a></span>
 </footer>
 </div>
 </body>

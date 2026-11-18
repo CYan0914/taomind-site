@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>困住的时候，古人怎么说 | TaoMind</title>
 <meta name="description" content="睡不着、焦虑、想辞职、失恋、拖延、职场压力——每个具体处境对应一章《道德经》，原文 + 一句解读 + 今天能做的一件事。" />
-<link rel="canonical" href="https://library.taomindapp.com/problems/" />
+<link rel="canonical" href="https://www.taomindapp.com/library/problems/" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="困住的时候，古人怎么说 | TaoMind" />
 <meta property="og:description" content="睡不着、焦虑、想辞职、失恋、拖延、职场压力——每个具体处境对应一章《道德经》，原文 + 一句解读 + 今天能做的一件事。" />
-<meta property="og:url" content="https://library.taomindapp.com/problems/" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:url" content="https://www.taomindapp.com/library/problems/" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,7 +30,7 @@
   "headline": "困住的时候，古人怎么说 | TaoMind",
   "description": "睡不着、焦虑、想辞职、失恋、拖延、职场压力——每个具体处境对应一章《道德经》，原文 + 一句解读 + 今天能做的一件事。",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/problems/"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/problems/"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,21 +65,28 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › 困住的时候</p>
-<h1>困住的时候，古人怎么说</h1>
-<p class="sub-pain">睡不着、想辞职、放不下、怕失败——每一个具体处境，都有一章经文对得上。</p>
-<div class="grid"><a href="cant-sleep.html">躺下三小时，脑子还在开会</a><a href="anxiety.html">事情还没发生，你已经演了十遍</a><a href="quit-job.html">每天早上醒来第一件事，是想请假</a><a href="heartbreak.html">人已经走了，你还在原地</a><a href="misunderstood.html">你解释了三遍，对方还是不信</a><a href="prove-yourself.html">做的每件事，都在等别人点头</a><a href="procrastination.html">明天一定开始，已经说了三十个明天</a><a href="comparison.html">刷了十分钟手机，心情全毁了</a><a href="anger.html">话已经说出口了，才意识到不该说</a><a href="no-direction.html">每条路看起来都对，也都不对</a><a href="burnout.html">不是想休息，是真的动不了了</a><a href="let-go.html">你知道该结束，但就是舍不得</a><a href="fear-of-failure.html">准备了一年了，还是没开始</a><a href="people-pleasing.html">所有人的需求都满足了，除了自己</a><a href="emptiness.html">什么都有，就是觉得没意思</a><a href="cant-declutter.html">东西堆了一屋子，一件都舍不得扔</a><a href="jealousy.html">看到别人的好消息，第一反应是难受</a><a href="impatience.html">等不了，一分钟都等不了</a><a href="loss.html">那个人那件事，再也回不来了</a><a href="cant-say-no.html">好的说出口，心里已经在骂自己</a></div>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <span class="zh">困住的时候</span><span class="en">When You Are Stuck</span></p>
+<h1><span class="zh">困住的时候，古人怎么说</span><span class="en">When you&#x27;re stuck, what the old texts say</span></h1>
+<p class="sub-pain"><span class="zh">睡不着、想辞职、放不下、怕失败——每一个具体处境，都有一章经文对得上。</span><span class="en">Can&#x27;t sleep, want to quit, can&#x27;t let go, afraid to fail. Each situation has a chapter that answers it.</span></p>
+<div class="grid"><a href="cant-sleep.html"><span class="zh">躺下三小时，脑子还在开会</span><span class="en">It&#x27;s 3 a.m. and your mind is still in a meeting</span></a><a href="anxiety.html"><span class="zh">事情还没发生，你已经演了十遍</span><span class="en">Nothing has happened yet and you&#x27;ve already lived it ten times</span></a><a href="quit-job.html"><span class="zh">每天早上醒来第一件事，是想请假</span><span class="en">The first thought every morning is how to get out of work</span></a><a href="heartbreak.html"><span class="zh">人已经走了，你还在原地</span><span class="en">They&#x27;re gone and you haven&#x27;t moved</span></a><a href="misunderstood.html"><span class="zh">你解释了三遍，对方还是不信</span><span class="en">You explained it three times and they still don&#x27;t believe you</span></a><a href="prove-yourself.html"><span class="zh">做的每件事，都在等别人点头</span><span class="en">Everything you do is waiting for someone to approve</span></a><a href="procrastination.html"><span class="zh">明天一定开始，已经说了三十个明天</span><span class="en">Tomorrow I&#x27;ll start. That&#x27;s thirty tomorrows now</span></a><a href="comparison.html"><span class="zh">刷了十分钟手机，心情全毁了</span><span class="en">Ten minutes of scrolling and the day is ruined</span></a><a href="anger.html"><span class="zh">话已经说出口了，才意识到不该说</span><span class="en">The words were out before you noticed they shouldn&#x27;t be</span></a><a href="no-direction.html"><span class="zh">每条路看起来都对，也都不对</span><span class="en">Every path looks right and none of them do</span></a><a href="burnout.html"><span class="zh">不是想休息，是真的动不了了</span><span class="en">Not tired enough to rest. Tired enough to stop moving</span></a><a href="let-go.html"><span class="zh">你知道该结束，但就是舍不得</span><span class="en">You know it should end and you can&#x27;t let go</span></a><a href="fear-of-failure.html"><span class="zh">准备了一年了，还是没开始</span><span class="en">A year of preparation and you still haven&#x27;t started</span></a><a href="people-pleasing.html"><span class="zh">所有人的需求都满足了，除了自己</span><span class="en">Everyone&#x27;s needs met except yours</span></a><a href="emptiness.html"><span class="zh">什么都有，就是觉得没意思</span><span class="en">You have everything and none of it lands</span></a><a href="cant-declutter.html"><span class="zh">东西堆了一屋子，一件都舍不得扔</span><span class="en">The house is full and you can&#x27;t throw anything out</span></a><a href="jealousy.html"><span class="zh">看到别人的好消息，第一反应是难受</span><span class="en">Someone else&#x27;s good news and your first reaction hurts</span></a><a href="impatience.html"><span class="zh">等不了，一分钟都等不了</span><span class="en">You can&#x27;t wait. Not even a minute</span></a><a href="loss.html"><span class="zh">那个人那件事，再也回不来了</span><span class="en">That person, that thing, isn&#x27;t coming back</span></a><a href="cant-say-no.html"><span class="zh">好的说出口，心里已经在骂自己</span><span class="en">Yes is out of your mouth and you&#x27;re already cursing yourself</span></a></div>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">写下你的处境，让 TaoMind 给你找那一章 →</a>
-  <p>道德经 81 章 + 金刚经 32 品，中英双语，每日一签。</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">写下你的处境，让 TaoMind 给你找那一章 →</span><span class="en">Describe your situation and let TaoMind find the chapter →</span></a>
+  <p><span class="zh">道德经 81 章 + 金刚经 32 品，中英双语，每日一签。</span><span class="en">81 chapters of the Tao Te Ching, 32 of the Diamond Sutra, bilingual, one verse a day.</span></p>
 </div>
 </div>
 </body>

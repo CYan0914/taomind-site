@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>外篇 · 至乐 · 庄子原文精讲 | TaoMind</title>
 <meta name="description" content="庄子外篇 · 至乐原文 + 一句导读。完整白话精讲、反思与每日修习在 TaoMind App。察其始而本无生，非徒无生也而本无形，非徒无形也而本无气。杂乎芒芴之间，变而有气，气变而有形，形变而有生，今又变而之死，是相与为春秋冬夏四时行也。" />
-<link rel="canonical" href="https://library.taomindapp.com/zhuangzi/chapter-9.html" />
+<link rel="canonical" href="https://www.taomindapp.com/library/zhuangzi/chapter-9.html" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="外篇 · 至乐 · 庄子原文精讲 | TaoMind" />
 <meta property="og:description" content="庄子外篇 · 至乐原文 + 一句导读。完整白话精讲、反思与每日修习在 TaoMind App。察其始而本无生，非徒无生也而本无形，非徒无形也而本无气。杂乎芒芴之间，变而有气，气变而有形，形变而有生，今又变而之死，是相与为春秋冬夏四时行也。" />
-<meta property="og:url" content="https://library.taomindapp.com/zhuangzi/chapter-9.html" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:url" content="https://www.taomindapp.com/library/zhuangzi/chapter-9.html" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,7 +30,7 @@
   "headline": "外篇 · 至乐 · 庄子原文精讲 | TaoMind",
   "description": "庄子外篇 · 至乐原文 + 一句导读。完整白话精讲、反思与每日修习在 TaoMind App。察其始而本无生，非徒无生也而本无形，非徒无形也而本无气。杂乎芒芴之间，变而有气，气变而有形，形变而有生，今又变而之死，是相与为春秋冬夏四时行也。",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/zhuangzi/chapter-9.html"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/zhuangzi/chapter-9.html"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,30 +65,37 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › <a href="zhuangzi/index.html">庄子</a> › 外篇 · 至乐</p>
-<h1>外篇 · 至乐 <span class="zh-tag">· 庄子</span><br><span class="zh-tag">Outer Chapters · Supreme Happiness</span></h1>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <a href="../zhuangzi/index.html"><span class="zh">庄子</span><span class="en">庄子</span></a> › <span class="zh">外篇 · 至乐</span><span class="en">Outer Chapters · Supreme Happiness</span></p>
+<h1><span class="zh">外篇 · 至乐</span><span class="en">Outer Chapters · Supreme Happiness</span></h1>
 <blockquote class="verse">察其始而本无生，非徒无生也而本无形，非徒无形也而本无气。杂乎芒芴之间，变而有气，气变而有形，形变而有生，今又变而之死，是相与为春秋冬夏四时行也。</blockquote>
-<h2>导读 · In brief</h2>
+<h2><span class="zh">导读</span><span class="en">In brief</span></h2>
 <p class="reflect">这段话的处境是：庄子的妻子死了，惠子去吊唁，发现他叉着腿坐在地上敲着盆唱歌。惠子说你太过分了。 庄子的回答不是「我想开了」，而是一段极其冷静的推导。 他往回推：她现在这样，本来就没有生命。不只是没有生命——本来就没有形体。不只是没有形体——本来就没有气。然后从一片混沌里，「变而有气，气变而有形，形变而有生」……</p>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">Read the full commentary in TaoMind →</a>
-  <p>The complete plain-language commentary, reflection and daily practice are in the TaoMind app.</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">在 TaoMind 读完整精讲 →</span><span class="en">Read the full commentary in TaoMind →</span></a>
+  <p><span class="zh">完整白话精讲、反思与每日修习都在 TaoMind App。</span><span class="en">The complete plain-language commentary, reflection and daily practice are in the TaoMind app.</span></p>
 </div>
 <div class="pager">
-  <a href="chapter-158.html">← 外篇 · 秋水</a>
-  <a class="next" href="chapter-160.html">外篇 · 达生 →</a>
+  <a href="chapter-158.html">← <span class="zh">外篇 · 秋水</span><span class="en">Outer Chapters · Autumn Floods</span></a>
+  <a class="next" href="chapter-160.html"><span class="zh">外篇 · 达生</span><span class="en">Outer Chapters · Mastering Life</span> →</a>
 </div>
 <footer class="site">
   <span>© 2026 TaoMind</span>
-  <span><a href="index.html">All 16 chapters</a></span>
+  <span><a href="../index.html"><span class="zh">全部 16 篇</span><span class="en">All 16 chapters</span></a></span>
 </footer>
 </div>
 </body>

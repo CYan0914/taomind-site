@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>每条路看起来都对，也都不对｜道德经第25章怎么说 | TaoMind</title>
 <meta name="description" content="别人都有目标，你连想成为什么样的人都答不上来。《道德经》第二十五章给的答案：吾不知其名，强字之曰道。" />
-<link rel="canonical" href="https://library.taomindapp.com/problems/no-direction.html" />
+<link rel="canonical" href="https://www.taomindapp.com/library/problems/no-direction.html" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="每条路看起来都对，也都不对｜道德经第25章怎么说 | TaoMind" />
 <meta property="og:description" content="别人都有目标，你连想成为什么样的人都答不上来。《道德经》第二十五章给的答案：吾不知其名，强字之曰道。" />
-<meta property="og:url" content="https://library.taomindapp.com/problems/no-direction.html" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:url" content="https://www.taomindapp.com/library/problems/no-direction.html" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,7 +30,7 @@
   "headline": "每条路看起来都对，也都不对｜道德经第25章怎么说 | TaoMind",
   "description": "别人都有目标，你连想成为什么样的人都答不上来。《道德经》第二十五章给的答案：吾不知其名，强字之曰道。",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/problems/no-direction.html"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/problems/no-direction.html"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,34 +65,41 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › 困住的时候</p>
-<h1>每条路看起来都对，也都不对</h1>
-<p class="sub-pain">别人都有目标，你连想成为什么样的人都答不上来。</p>
-<blockquote class="verse">有物混成，先天地生。寂兮寥兮，独立不改，周行而不殆，可以为天下母。吾不知其名，字之曰道，强为之名曰大。大曰逝，逝曰远，远曰反。故道大，天大，地大，王亦大。域中有四大，而王居其一焉。人法地，地法天，天法道，道法自然。<span class="verse-src">——《道德经》第二十五章</span></blockquote>
-<h2>老子怎么说</h2>
-<div class="commentary"><p>第二十五章说有物混成，先天地生，吾不知其名，强字之曰道——有个东西浑然一体，在天地之前就存在，我不知道它叫什么，勉强称它为道。连老子都说不知道名字，只能说强字之曰。说不清楚不等于没有，只是还没到能说清的时候。</p></div>
-<div class="keyline">吾不知其名，强字之曰道</div>
-<h2>今天可以做的一件事</h2>
-<div class="action-box">写下三件最近让你忘了看时间的事。不看它有没有用，只看它让你忘了时间。</div>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <a href="index.html"><span class="zh">困住的时候</span><span class="en">When You Are Stuck</span></a></p>
+<h1><span class="zh">每条路看起来都对，也都不对</span><span class="en">Every path looks right and none of them do</span></h1>
+<p class="sub-pain"><span class="zh">别人都有目标，你连想成为什么样的人都答不上来。</span><span class="en">Everyone else seems to have a goal. You can&#x27;t even answer what kind of person you want to be.</span></p>
+<blockquote class="verse"><span class="zh">有物混成，先天地生。寂兮寥兮，独立不改，周行而不殆，可以为天下母。吾不知其名，字之曰道，强为之名曰大。大曰逝，逝曰远，远曰反。故道大，天大，地大，王亦大。域中有四大，而王居其一焉。人法地，地法天，天法道，道法自然。</span><span class="en">There is a thing, mixed and complete, born before heaven and earth. Silent and empty, it stands alone and does not change; it circles everywhere without danger, and can be the mother of the world. I do not know its name; I style it the Tao, and force a name on it: the Great. The Great means passing on; passing on means going far; going far means returning. Therefore the Tao is great, heaven is great, earth is great, and the king is also great. Within the realm there are four greats, and the king occupies one of them. Man follows earth, earth follows heaven, heaven follows the Tao, and the Tao follows nature.</span><span class="verse-src"><span class="zh">——《道德经》第二十五章</span><span class="en">— Tao Te Ching, Chapter 25</span></span></blockquote>
+<h2><span class="zh">老子怎么说</span><span class="en">What Lao Tzu says</span></h2>
+<div class="commentary"><p><span class="zh">第二十五章说有物混成，先天地生，吾不知其名，强字之曰道——有个东西浑然一体，在天地之前就存在，我不知道它叫什么，勉强称它为道。连老子都说不知道名字，只能说强字之曰。说不清楚不等于没有，只是还没到能说清的时候。</span><span class="en">Chapter 25 says there&#x27;s something formed in chaos, born before heaven and earth. I don&#x27;t know its name, so I call it the Way. Lao Tzu himself says he doesn&#x27;t know the name and is only approximating. Not being able to say it clearly doesn&#x27;t mean it isn&#x27;t there. It means it isn&#x27;t ready to be said yet.</span></p></div>
+<div class="keyline"><span class="zh">吾不知其名，强字之曰道</span><span class="en">I do not know its name; I call it the Way</span></div>
+<h2><span class="zh">今天可以做的一件事</span><span class="en">One thing to do today</span></h2>
+<div class="action-box"><span class="zh">写下三件最近让你忘了看时间的事。不看它有没有用，只看它让你忘了时间。</span><span class="en">Write down three things that recently made you lose track of time. Don&#x27;t ask whether they&#x27;re useful. Just notice which ones did it.</span></div>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">把这个方法装进手机 →</a>
-  <p>TaoMind：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">把这个方法装进手机 →</span><span class="en">Put this in your pocket →</span></a>
+  <p><span class="zh">TaoMind：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</span><span class="en">TaoMind: describe your situation, get the chapter that fits, one verse a day. Seven days in a row earns a week of Pro.</span></p>
 </div>
 <div class="list-group">
-  <h3>也许你还在困扰</h3>
-  <div class="grid"><a href="cant-sleep.html">躺下三小时，脑子还在开会</a><a href="anxiety.html">事情还没发生，你已经演了十遍</a><a href="quit-job.html">每天早上醒来第一件事，是想请假</a><a href="heartbreak.html">人已经走了，你还在原地</a><a href="misunderstood.html">你解释了三遍，对方还是不信</a><a href="prove-yourself.html">做的每件事，都在等别人点头</a></div>
+  <h3><span class="zh">也许你还在困扰</span><span class="en">You might also be stuck on</span></h3>
+  <div class="grid"><a href="cant-sleep.html"><span class="zh">躺下三小时，脑子还在开会</span><span class="en">It&#x27;s 3 a.m. and your mind is still in a meeting</span></a><a href="anxiety.html"><span class="zh">事情还没发生，你已经演了十遍</span><span class="en">Nothing has happened yet and you&#x27;ve already lived it ten times</span></a><a href="quit-job.html"><span class="zh">每天早上醒来第一件事，是想请假</span><span class="en">The first thought every morning is how to get out of work</span></a><a href="heartbreak.html"><span class="zh">人已经走了，你还在原地</span><span class="en">They&#x27;re gone and you haven&#x27;t moved</span></a><a href="misunderstood.html"><span class="zh">你解释了三遍，对方还是不信</span><span class="en">You explained it three times and they still don&#x27;t believe you</span></a><a href="prove-yourself.html"><span class="zh">做的每件事，都在等别人点头</span><span class="en">Everything you do is waiting for someone to approve</span></a></div>
 </div>
 <footer class="site">
   <span>© 2026 TaoMind</span>
-  <span><a href="index.html">全部经文</a></span>
+  <span><a href="../index.html"><span class="zh">全部经文</span><span class="en">All chapters</span></a></span>
 </footer>
 </div>
 </body>

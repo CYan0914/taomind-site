@@ -1,24 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Tao Te Ching Chapter None: Full Text &amp; Meaning | TaoMind</title>
-<meta name="description" content="Read the original Tao Te Ching Chapter None with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 以道佐人主者，不以兵强天下，其事好还。师之所处，荆棘生焉。大军之后，必有凶年。善有果而已，不敢以取强。果而勿矜，果而勿伐，果而勿骄，果而不得已，果而勿强。物壮则" />
-<link rel="canonical" href="https://library.taomindapp.com/tao-te-ching/chapter-30.html" />
+<title>Tao Te Ching Chapter 30: Full Text &amp; Meaning | TaoMind</title>
+<meta name="description" content="Read the original Tao Te Ching Chapter 30 with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 以道佐人主者，不以兵强天下，其事好还。师之所处，荆棘生焉。大军之后，必有凶年。善有果而已，不敢以取强。果而勿矜，果而勿伐，果而勿骄，果而不得已，果而勿强。物壮则" />
+<link rel="canonical" href="https://www.taomindapp.com/library/tao-te-ching/chapter-30.html" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Tao Te Ching Chapter None: Full Text &amp; Meaning | TaoMind" />
-<meta property="og:description" content="Read the original Tao Te Ching Chapter None with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 以道佐人主者，不以兵强天下，其事好还。师之所处，荆棘生焉。大军之后，必有凶年。善有果而已，不敢以取强。果而勿矜，果而勿伐，果而勿骄，果而不得已，果而勿强。物壮则" />
-<meta property="og:url" content="https://library.taomindapp.com/tao-te-ching/chapter-30.html" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:title" content="Tao Te Ching Chapter 30: Full Text &amp; Meaning | TaoMind" />
+<meta property="og:description" content="Read the original Tao Te Ching Chapter 30 with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 以道佐人主者，不以兵强天下，其事好还。师之所处，荆棘生焉。大军之后，必有凶年。善有果而已，不敢以取强。果而勿矜，果而勿伐，果而勿骄，果而不得已，果而勿强。物壮则" />
+<meta property="og:url" content="https://www.taomindapp.com/library/tao-te-ching/chapter-30.html" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Tao Te Ching Chapter None: Full Text & Meaning | TaoMind",
-  "description": "Read the original Tao Te Ching Chapter None with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 以道佐人主者，不以兵强天下，其事好还。师之所处，荆棘生焉。大军之后，必有凶年。善有果而已，不敢以取强。果而勿矜，果而勿伐，果而勿骄，果而不得已，果而勿强。物壮则",
+  "headline": "Tao Te Ching Chapter 30: Full Text & Meaning | TaoMind",
+  "description": "Read the original Tao Te Ching Chapter 30 with a one-line insight. Get TaoMind for the full plain-language commentary, reflection and daily practice. 以道佐人主者，不以兵强天下，其事好还。师之所处，荆棘生焉。大军之后，必有凶年。善有果而已，不敢以取强。果而勿矜，果而勿伐，果而勿骄，果而不得已，果而勿强。物壮则",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/tao-te-ching/chapter-30.html"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/tao-te-ching/chapter-30.html"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,30 +65,37 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › <a href="tao-te-ching/index.html">Tao Te Ching</a> › Chapter None</p>
-<h1>Tao Te Ching Chapter None <span class="zh-tag">· 道德经 第None章</span></h1>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <a href="../tao-te-ching/index.html"><span class="zh">道德经</span><span class="en">Tao Te Ching</span></a> › <span class="zh">第30章</span><span class="en">Chapter 30</span></p>
+<h1><span class="zh">道德经 第30章</span><span class="en">Tao Te Ching Chapter 30</span></h1>
 <blockquote class="verse">以道佐人主者，不以兵强天下，其事好还。师之所处，荆棘生焉。大军之后，必有凶年。善有果而已，不敢以取强。果而勿矜，果而勿伐，果而勿骄，果而不得已，果而勿强。物壮则老，是谓不道，不道早已。</blockquote>
-<h2>导读 · In brief</h2>
+<h2><span class="zh">导读</span><span class="en">In brief</span></h2>
 <p class="reflect">真正厉害的领导者，事成了就收手，不靠压服别人来证明自己；目标达成了也不炫耀，不是为逞强，而是顺势而为、水到渠成。 比如你带团队完成一个项目，别急着“看我多能干”，该复盘就复盘，该放权就放权——真正的力，是让事情自己走通，而不是硬推。</p>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">Read the full commentary in TaoMind →</a>
-  <p>The complete plain-language commentary, reflection and daily practice are in the TaoMind app.</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">在 TaoMind 读完整精讲 →</span><span class="en">Read the full commentary in TaoMind →</span></a>
+  <p><span class="zh">完整白话精讲、反思与每日修习都在 TaoMind App。</span><span class="en">The complete plain-language commentary, reflection and daily practice are in the TaoMind app.</span></p>
 </div>
 <div class="pager">
-  <a href="chapter-29.html">← 第二十九章</a>
-  <a class="next" href="chapter-31.html">第三十一章 →</a>
+  <a href="chapter-29.html">← <span class="zh">第二十九章</span><span class="en">Chapter 29</span></a>
+  <a class="next" href="chapter-31.html"><span class="zh">第三十一章</span><span class="en">Chapter 31</span> →</a>
 </div>
 <footer class="site">
   <span>© 2026 TaoMind</span>
-  <span><a href="index.html">All 81 chapters</a></span>
+  <span><a href="../index.html"><span class="zh">全部 81 章</span><span class="en">All 81 chapters</span></a></span>
 </footer>
 </div>
 </body>

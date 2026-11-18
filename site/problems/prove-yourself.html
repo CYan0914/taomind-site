@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>做的每件事，都在等别人点头｜道德经第33章怎么说 | TaoMind</title>
 <meta name="description" content="你很清楚自己有能力，但每次没被看见，心里就堵得慌。《道德经》第三十三章给的答案：胜人者有力，自胜者强。" />
-<link rel="canonical" href="https://library.taomindapp.com/problems/prove-yourself.html" />
+<link rel="canonical" href="https://www.taomindapp.com/library/problems/prove-yourself.html" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="做的每件事，都在等别人点头｜道德经第33章怎么说 | TaoMind" />
 <meta property="og:description" content="你很清楚自己有能力，但每次没被看见，心里就堵得慌。《道德经》第三十三章给的答案：胜人者有力，自胜者强。" />
-<meta property="og:url" content="https://library.taomindapp.com/problems/prove-yourself.html" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:url" content="https://www.taomindapp.com/library/problems/prove-yourself.html" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,7 +30,7 @@
   "headline": "做的每件事，都在等别人点头｜道德经第33章怎么说 | TaoMind",
   "description": "你很清楚自己有能力，但每次没被看见，心里就堵得慌。《道德经》第三十三章给的答案：胜人者有力，自胜者强。",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/problems/prove-yourself.html"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/problems/prove-yourself.html"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,34 +65,41 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › 困住的时候</p>
-<h1>做的每件事，都在等别人点头</h1>
-<p class="sub-pain">你很清楚自己有能力，但每次没被看见，心里就堵得慌。</p>
-<blockquote class="verse">知人者智，自知者明。胜人者有力，自胜者强。知足者富，强行者有志，不失其所者久，死而不亡者寿。<span class="verse-src">——《道德经》第三十三章</span></blockquote>
-<h2>老子怎么说</h2>
-<div class="commentary"><p>第三十三章说知人者智，自知者明；胜人者有力，自胜者强——看懂别人算聪明，看懂自己才算明白；赢过别人是有力气，赢过自己才是真的强。你把尺子交给了别人，老子说，尺子在你手里。</p></div>
-<div class="keyline">胜人者有力，自胜者强</div>
-<h2>今天可以做的一件事</h2>
-<div class="action-box">回想最近一件让你觉得被低估的事，问自己：如果没人知道，我还会做吗？</div>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <a href="index.html"><span class="zh">困住的时候</span><span class="en">When You Are Stuck</span></a></p>
+<h1><span class="zh">做的每件事，都在等别人点头</span><span class="en">Everything you do is waiting for someone to approve</span></h1>
+<p class="sub-pain"><span class="zh">你很清楚自己有能力，但每次没被看见，心里就堵得慌。</span><span class="en">You know you&#x27;re capable. But every time it goes unseen, something in you knots up.</span></p>
+<blockquote class="verse"><span class="zh">知人者智，自知者明。胜人者有力，自胜者强。知足者富，强行者有志，不失其所者久，死而不亡者寿。</span><span class="en">One who knows others is clever; one who knows himself is clear. One who conquers others has force; one who conquers himself is strong. One who knows contentment is rich; one who acts with force has will. One who does not lose his place endures; one who dies but is not lost is long-lived.</span><span class="verse-src"><span class="zh">——《道德经》第三十三章</span><span class="en">— Tao Te Ching, Chapter 33</span></span></blockquote>
+<h2><span class="zh">老子怎么说</span><span class="en">What Lao Tzu says</span></h2>
+<div class="commentary"><p><span class="zh">第三十三章说知人者智，自知者明；胜人者有力，自胜者强——看懂别人算聪明，看懂自己才算明白；赢过别人是有力气，赢过自己才是真的强。你把尺子交给了别人，老子说，尺子在你手里。</span><span class="en">Chapter 33 says knowing others is intelligence, knowing yourself is clarity. Winning against others is strength, winning against yourself is real power. You handed the ruler to someone else. Lao Tzu says the ruler was in your hand the whole time.</span></p></div>
+<div class="keyline"><span class="zh">胜人者有力，自胜者强</span><span class="en">Winning over others is strength; winning over yourself is power</span></div>
+<h2><span class="zh">今天可以做的一件事</span><span class="en">One thing to do today</span></h2>
+<div class="action-box"><span class="zh">回想最近一件让你觉得被低估的事，问自己：如果没人知道，我还会做吗？</span><span class="en">Think of the last time you felt underrated. Ask yourself: would I still do it if nobody knew?</span></div>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">把这个方法装进手机 →</a>
-  <p>TaoMind：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">把这个方法装进手机 →</span><span class="en">Put this in your pocket →</span></a>
+  <p><span class="zh">TaoMind：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</span><span class="en">TaoMind: describe your situation, get the chapter that fits, one verse a day. Seven days in a row earns a week of Pro.</span></p>
 </div>
 <div class="list-group">
-  <h3>也许你还在困扰</h3>
-  <div class="grid"><a href="cant-sleep.html">躺下三小时，脑子还在开会</a><a href="anxiety.html">事情还没发生，你已经演了十遍</a><a href="quit-job.html">每天早上醒来第一件事，是想请假</a><a href="heartbreak.html">人已经走了，你还在原地</a><a href="misunderstood.html">你解释了三遍，对方还是不信</a><a href="procrastination.html">明天一定开始，已经说了三十个明天</a></div>
+  <h3><span class="zh">也许你还在困扰</span><span class="en">You might also be stuck on</span></h3>
+  <div class="grid"><a href="cant-sleep.html"><span class="zh">躺下三小时，脑子还在开会</span><span class="en">It&#x27;s 3 a.m. and your mind is still in a meeting</span></a><a href="anxiety.html"><span class="zh">事情还没发生，你已经演了十遍</span><span class="en">Nothing has happened yet and you&#x27;ve already lived it ten times</span></a><a href="quit-job.html"><span class="zh">每天早上醒来第一件事，是想请假</span><span class="en">The first thought every morning is how to get out of work</span></a><a href="heartbreak.html"><span class="zh">人已经走了，你还在原地</span><span class="en">They&#x27;re gone and you haven&#x27;t moved</span></a><a href="misunderstood.html"><span class="zh">你解释了三遍，对方还是不信</span><span class="en">You explained it three times and they still don&#x27;t believe you</span></a><a href="procrastination.html"><span class="zh">明天一定开始，已经说了三十个明天</span><span class="en">Tomorrow I&#x27;ll start. That&#x27;s thirty tomorrows now</span></a></div>
 </div>
 <footer class="site">
   <span>© 2026 TaoMind</span>
-  <span><a href="index.html">全部经文</a></span>
+  <span><a href="../index.html"><span class="zh">全部经文</span><span class="en">All chapters</span></a></span>
 </footer>
 </div>
 </body>

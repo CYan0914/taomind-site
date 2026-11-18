@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>明天一定开始，已经说了三十个明天｜道德经第64章怎么说 | TaoMind</title>
 <meta name="description" content="不是不想做，是一想到整件事有多大，就瘫住了。《道德经》第六十四章给的答案：千里之行，始于足下。" />
-<link rel="canonical" href="https://library.taomindapp.com/problems/procrastination.html" />
+<link rel="canonical" href="https://www.taomindapp.com/library/problems/procrastination.html" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="明天一定开始，已经说了三十个明天｜道德经第64章怎么说 | TaoMind" />
 <meta property="og:description" content="不是不想做，是一想到整件事有多大，就瘫住了。《道德经》第六十四章给的答案：千里之行，始于足下。" />
-<meta property="og:url" content="https://library.taomindapp.com/problems/procrastination.html" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:url" content="https://www.taomindapp.com/library/problems/procrastination.html" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,7 +30,7 @@
   "headline": "明天一定开始，已经说了三十个明天｜道德经第64章怎么说 | TaoMind",
   "description": "不是不想做，是一想到整件事有多大，就瘫住了。《道德经》第六十四章给的答案：千里之行，始于足下。",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/problems/procrastination.html"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/problems/procrastination.html"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,34 +65,41 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › 困住的时候</p>
-<h1>明天一定开始，已经说了三十个明天</h1>
-<p class="sub-pain">不是不想做，是一想到整件事有多大，就瘫住了。</p>
-<blockquote class="verse">其安易持，其未兆易谋，其脆易泮，其微易散。为之于未有，治之于未乱。合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。为者败之，执者失之。是以圣人无为，故无败；无执，故无失。民之从事，常于几成而败之。慎终如始，则无败事。是以圣人欲不欲，不贵难得之货。学不学，复众人之所过。以辅万物之自然，而不敢为。<span class="verse-src">——《道德经》第六十四章</span></blockquote>
-<h2>老子怎么说</h2>
-<div class="commentary"><p>第六十四章说千里之行，始于足下。这句话被用滥了，但前面还有更狠的一句：九层之台，起于累土。老子没说要有决心，他说的是从最小的一捧土开始。让你瘫住的不是事情本身，是你脑子里的整件事。</p></div>
-<div class="keyline">千里之行，始于足下</div>
-<h2>今天可以做的一件事</h2>
-<div class="action-box">把这件事拆到小得可笑：只做两分钟的那个版本。现在就开始这两分钟。</div>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <a href="index.html"><span class="zh">困住的时候</span><span class="en">When You Are Stuck</span></a></p>
+<h1><span class="zh">明天一定开始，已经说了三十个明天</span><span class="en">Tomorrow I&#x27;ll start. That&#x27;s thirty tomorrows now</span></h1>
+<p class="sub-pain"><span class="zh">不是不想做，是一想到整件事有多大，就瘫住了。</span><span class="en">It&#x27;s not that you don&#x27;t want to. It&#x27;s that the size of the whole thing freezes you.</span></p>
+<blockquote class="verse"><span class="zh">其安易持，其未兆易谋，其脆易泮，其微易散。为之于未有，治之于未乱。合抱之木，生于毫末；九层之台，起于累土；千里之行，始于足下。为者败之，执者失之。是以圣人无为，故无败；无执，故无失。民之从事，常于几成而败之。慎终如始，则无败事。是以圣人欲不欲，不贵难得之货。学不学，复众人之所过。以辅万物之自然，而不敢为。</span><span class="en">What is at rest is easy to hold; what has not yet shown a sign is easy to plan; what is brittle is easy to break; what is small is easy to scatter. Act on it before it exists; govern it before it is disordered. A tree that fills the embrace grows from a sprout; a nine-story terrace rises from a heap of earth; a journey of a thousand miles begins beneath one&#x27;s feet. One who acts on it destroys it; one who grasps it loses it. Therefore the sage does not act, and so does not fail; does not grasp, and so does not lose. In people&#x27;s handling of affairs, they always fail when they are close to success. If one is as careful at the end as at the beginning, one has no ruined affairs. Therefore the sage desires without desire, and does not prize rare goods. He learns without learning, and returns to what the multitude has passed by. Thus he helps the ten thousand things be natural, and does not dare to act.</span><span class="verse-src"><span class="zh">——《道德经》第六十四章</span><span class="en">— Tao Te Ching, Chapter 64</span></span></blockquote>
+<h2><span class="zh">老子怎么说</span><span class="en">What Lao Tzu says</span></h2>
+<div class="commentary"><p><span class="zh">第六十四章说千里之行，始于足下。这句话被用滥了，但前面还有更狠的一句：九层之台，起于累土。老子没说要有决心，他说的是从最小的一捧土开始。让你瘫住的不是事情本身，是你脑子里的整件事。</span><span class="en">Chapter 64 says a journey of a thousand miles starts under your feet. The line gets quoted to death, but earlier in the same chapter: a nine-story tower begins with a basket of earth. Lao Tzu doesn&#x27;t ask for resolve. He asks for the smallest possible amount of dirt. What freezes you isn&#x27;t the task. It&#x27;s the whole thing in your head.</span></p></div>
+<div class="keyline"><span class="zh">千里之行，始于足下</span><span class="en">A journey of a thousand miles begins under your feet</span></div>
+<h2><span class="zh">今天可以做的一件事</span><span class="en">One thing to do today</span></h2>
+<div class="action-box"><span class="zh">把这件事拆到小得可笑：只做两分钟的那个版本。现在就开始这两分钟。</span><span class="en">Cut the task down to a two-minute version. Do those two minutes now.</span></div>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">把这个方法装进手机 →</a>
-  <p>TaoMind：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">把这个方法装进手机 →</span><span class="en">Put this in your pocket →</span></a>
+  <p><span class="zh">TaoMind：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</span><span class="en">TaoMind: describe your situation, get the chapter that fits, one verse a day. Seven days in a row earns a week of Pro.</span></p>
 </div>
 <div class="list-group">
-  <h3>也许你还在困扰</h3>
-  <div class="grid"><a href="cant-sleep.html">躺下三小时，脑子还在开会</a><a href="anxiety.html">事情还没发生，你已经演了十遍</a><a href="quit-job.html">每天早上醒来第一件事，是想请假</a><a href="heartbreak.html">人已经走了，你还在原地</a><a href="misunderstood.html">你解释了三遍，对方还是不信</a><a href="prove-yourself.html">做的每件事，都在等别人点头</a></div>
+  <h3><span class="zh">也许你还在困扰</span><span class="en">You might also be stuck on</span></h3>
+  <div class="grid"><a href="cant-sleep.html"><span class="zh">躺下三小时，脑子还在开会</span><span class="en">It&#x27;s 3 a.m. and your mind is still in a meeting</span></a><a href="anxiety.html"><span class="zh">事情还没发生，你已经演了十遍</span><span class="en">Nothing has happened yet and you&#x27;ve already lived it ten times</span></a><a href="quit-job.html"><span class="zh">每天早上醒来第一件事，是想请假</span><span class="en">The first thought every morning is how to get out of work</span></a><a href="heartbreak.html"><span class="zh">人已经走了，你还在原地</span><span class="en">They&#x27;re gone and you haven&#x27;t moved</span></a><a href="misunderstood.html"><span class="zh">你解释了三遍，对方还是不信</span><span class="en">You explained it three times and they still don&#x27;t believe you</span></a><a href="prove-yourself.html"><span class="zh">做的每件事，都在等别人点头</span><span class="en">Everything you do is waiting for someone to approve</span></a></div>
 </div>
 <footer class="site">
   <span>© 2026 TaoMind</span>
-  <span><a href="index.html">全部经文</a></span>
+  <span><a href="../index.html"><span class="zh">全部经文</span><span class="en">All chapters</span></a></span>
 </footer>
 </div>
 </body>

@@ -17,7 +17,7 @@ ICON_PATH = r"C:\Users\Cyan\Desktop\TaoMind-iOS\Resources\Assets.xcassets\AppIco
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(BASE_DIR, "site")
-SITE_URL = "https://library.taomindapp.com/"
+SITE_URL = "https://www.taomindapp.com/library/"
 
 APP_NAME = "TaoMind"
 APP_URL = "https://apps.apple.com/app/id6792008756"
@@ -153,9 +153,21 @@ def page_shell(title, description, canonical, body, og_image="", extra_head=""):
     if og_image:
         og = f'<meta property="og:image" content="{esc(og_image)}" />\n'
     return """<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){{
+  var l = null;
+  try {{ l = localStorage.getItem('tm-lang'); }} catch(e){{}}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+}})();
+function setLang(l){{
+  document.documentElement.setAttribute('data-lang', l);
+  try {{ localStorage.setItem('tm-lang', l); }} catch(e){{}}
+}}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>{title}</title>
 <meta name="description" content="{desc}" />
@@ -179,10 +191,10 @@ nav.top a {{ color:var(--accent); text-decoration:none; font-size:.9rem; margin-
 .crumb a {{ color:var(--muted); text-decoration:none; }}
 h1 {{ font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }}
 .zh-tag {{ color:var(--muted); font-weight:400; font-size:1.05rem; }}
-.verse {{ font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }}
+.verse {{ font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }}
 h2 {{ font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }}
 .commentary p {{ margin:.5rem 0; }}
-.reflect {{ background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }}
+.reflect {{ background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }}
 .pager {{ display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }}
 .pager a {{ color:var(--accent); text-decoration:none; max-width:45%; }}
 .pager .next {{ text-align:right; }}
@@ -198,6 +210,13 @@ h2 {{ font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacin
 .hero h1 {{ font-size:2.3rem; }}
 .hero p {{ color:var(--muted); max-width:560px; margin:.4rem auto 0; }}
 footer.site {{ margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }}
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en {{ display:none !important; }}
+html[data-lang="en"] .zh {{ display:none !important; }}
+.lang-sw {{ display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }}
+.lang-sw button {{ background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }}
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] {{ background:var(--accent); color:#fff; border-color:var(--accent); }}
 </style>
 </head>
 <body>
@@ -226,60 +245,70 @@ def chapter_canonical(source, num):
 
 
 def build_chapter_page(c, prev_c=None, next_c=None, seq=0, total=0):
+    """章节页：正文/标题/导航全部双语，靠 html[data-lang] 二选一。"""
     source = c["source"]
     slug = slugify_source(source)
     meta = SOURCE_META[source]
     ch = c.get("chapter") or ""
-    ch_en = c.get("chapter_en") or ""
-    num = chapter_num(ch)
-    seq_label = seq or num or 0
+    ch_en = c.get("chapter_en") or ch
+    # Tao Te Ching / Diamond Sutra 的 chapter 是「第一章」这种中文数字，
+    # chapter_num 的正则只认阿拉伯数字 → 永远 None。用该经内的顺序号（seq）。
+    num = seq or chapter_num(ch) or 0
+    seq_label = num
 
     is_en = source in ("Tao Te Ching", "Diamond Sutra")
     if is_en:
-        zh = zh_label(source, num)
         title = f"{meta['title']} Chapter {num}: Full Text & Meaning | {APP_NAME}"
         description = (f"Read the original {meta['title']} Chapter {num} with a one-line insight. "
                        f"Get {APP_NAME} for the full plain-language commentary, reflection and daily practice. "
                        f"{(c.get('verse_text') or '')[:80]}")
-        h1 = f"{meta['title']} Chapter {num} <span class=\"zh-tag\">· {esc(zh)}</span>"
-        crumb_tail = f"Chapter {num}"
+        zh_h1 = f"{meta['zh']} 第{num}{meta['zhUnit']}"
+        en_h1 = f"{meta['title']} Chapter {num}"
+        zh_crumb = f"第{num}{meta['zhUnit']}"
+        en_crumb = f"Chapter {num}"
     else:
-        # 中文经部（感应篇/清静经/列子/庄子）：chapter 名本身即标题
         title = f"{esc(ch)} · {meta['zh']}原文精讲 | {APP_NAME}"
         description = (f"{meta['zh']}{ch}原文 + 一句导读。"
                        f"完整白话精讲、反思与每日修习在 {APP_NAME} App。"
                        f"{(c.get('verse_text') or '')[:80]}")
-        h1 = f"{esc(ch)} <span class=\"zh-tag\">· {esc(meta['zh'])}</span>"
-        if ch_en:
-            h1 += f"<br><span class=\"zh-tag\">{esc(ch_en)}</span>"
-        crumb_tail = ch
+        zh_h1 = ch
+        en_h1 = ch_en or ch
+        zh_crumb = ch
+        en_crumb = ch_en or ch
+
     canonical = chapter_canonical(source, seq_label)
+
+    def span(zh, en):
+        return f'<span class="zh">{esc(zh)}</span><span class="en">{esc(en)}</span>'
 
     prev_link, next_link = "", ""
     if prev_c:
         pn = entry_seq(prev_c)
-        prev_link = f'<a href="chapter-{pn}.html">← {esc(prev_c.get("chapter") or "")}</a>'
+        prev_link = (f'<a href="chapter-{pn}.html">← '
+                     f'{span(prev_c.get("chapter") or "", prev_c.get("chapter_en") or prev_c.get("chapter") or "")}</a>')
     if next_c:
         nn = entry_seq(next_c)
-        next_link = f'<a class="next" href="chapter-{nn}.html">{esc(next_c.get("chapter") or "")} →</a>'
+        next_link = (f'<a class="next" href="chapter-{nn}.html">'
+                     f'{span(next_c.get("chapter") or "", next_c.get("chapter_en") or next_c.get("chapter") or "")} →</a>')
 
     verse_html = esc(c.get("verse_text") or "")
     intro = teaser(c.get("commentary"))
 
-    footer_total = f"All {total} chapters" if total else "All chapters"
+    footer_total = span(f"全部 {total} {meta['zhUnit']}", f"All {total} chapters") if total else span("全部经文", "All chapters")
+
     body = f"""<div class="container">
 <header class="site">
   <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
-  <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
+  <nav class="top"><a href="{BASE_REL}index.html">{span("全部经文", "All Chapters")}</a><a href="{APP_URL}">{span("下载 App", "Get the App")}</a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › <a href="{BASE_REL}{slug}/index.html">{meta['title']}</a> › {esc(crumb_tail)}</p>
-<h1>{h1}</h1>
+<p class="crumb"><a href="{BASE_REL}index.html">{span("首页", "Home")}</a> › <a href="{BASE_REL}{slug}/index.html">{span(meta['zh'], meta['title'])}</a> › {span(zh_crumb, en_crumb)}</p>
+<h1>{span(zh_h1, en_h1)}</h1>
 <blockquote class="verse">{verse_html}</blockquote>
-<h2>导读 · In brief</h2>
+<h2>{span("导读", "In brief")}</h2>
 <p class="reflect">{intro}</p>
 <div class="cta">
-  <a class="btn" href="{APP_URL}">Read the full commentary in {APP_NAME} →</a>
-  <p>The complete plain-language commentary, reflection and daily practice are in the {APP_NAME} app.</p>
+  <a class="btn" href="{APP_URL}">{span("在 " + APP_NAME + " 读完整精讲 →", "Read the full commentary in " + APP_NAME + " →")}</a>
+  <p>{span("完整白话精讲、反思与每日修习都在 TaoMind App。", "The complete plain-language commentary, reflection and daily practice are in the " + APP_NAME + " app.")}</p>
 </div>
 <div class="pager">
   {prev_link}
@@ -294,15 +323,15 @@ def build_chapter_page(c, prev_c=None, next_c=None, seq=0, total=0):
 
 
 def build_index(content):
+    """首页：全双语，靠 html[data-lang] 二选一显示。"""
     groups = {}
     for c in content:
         groups.setdefault(c["source"], []).append(c)
 
     total = sum(len(v) for v in groups.values())
     hero = f"""<div class="hero">
-<h1>Daily Tao Te Ching &amp; Diamond Sutra — Read, Reflect, Grow</h1>
-<h2 class="zh-hero">把《道德经》变成每天能用的一句话</h2>
-<p>{total} chapters, each with the original verse and a one-line insight. Free to read on the web; get the app for the full plain-language commentary, reflection and daily practice.<br>写下你卡住的事，给你对症的那章经文、一段白话和今天就能做的一件事。</p>
+<h1><span class="zh">把《道德经》变成每天能用的一句话</span><span class="en">Daily Tao Te Ching &amp; Diamond Sutra</span></h1>
+<p><span class="zh">{total} 篇经文，每篇原文配一句导读。网页免费阅读，完整白话精讲与每日修习在 TaoMind App。</span><span class="en">{total} chapters, each with the original verse and a one-line insight. Free to read on the web; get the app for the full commentary and daily practice.</span></p>
 </div>"""
 
     groups_html = []
@@ -315,34 +344,57 @@ def build_index(content):
         for c in items:
             seq = entry_seq(c)
             if source in ("Tao Te Ching", "Diamond Sutra"):
-                label = f"{meta['title']} Chapter {chapter_num(c.get('chapter'))}"
+                zh_label = f"第{seq}{meta['zhUnit']}"
+                en_label = f"Chapter {seq}"
             else:
-                label = c.get("chapter") or f"{meta['zh']} {seq}"
-            links.append(f'<a href="{chapter_url(source, seq)}">{esc(label)}</a>')
+                zh_label = c.get("chapter") or f"{meta['zh']} {seq}"
+                en_label = c.get("chapter_en") or zh_label
+            links.append(
+                f'<a href="{chapter_url(source, seq)}">'
+                f'<span class="zh">{esc(zh_label)}</span>'
+                f'<span class="en">{esc(en_label)}</span></a>'
+            )
+        unit_en = "chapters"
         groups_html.append(
-            f'<div class="list-group"><h3>{esc(meta["title"])} · {esc(meta["zh"])} ({len(items)} {meta["zhUnit"]})</h3>'
-            f'<div class="grid">{"".join(links)}</div></div>'
+            f'<div class="list-group"><h3>'
+            f'<span class="zh">{esc(meta["zh"])}（{len(items)} {meta["zhUnit"]}）</span>'
+            f'<span class="en">{esc(meta["title"])} ({len(items)} {unit_en})</span>'
+            f'</h3><div class="grid">{"".join(links)}</div></div>'
         )
+
+    quick = [
+        ("anxiety", "焦虑", "Anxiety"),
+        ("cant-sleep", "睡不着", "Can't sleep"),
+        ("quit-job", "想辞职", "Quitting your job"),
+        ("heartbreak", "失恋", "Heartbreak"),
+        ("procrastination", "拖延", "Procrastination"),
+        ("burnout", "撑不住", "Burnout"),
+        ("comparison", "爱比较", "Comparison"),
+        ("index", "全部 20 个 →", "All 20 →"),
+    ]
+    quick_links = "".join(
+        f'<a href="{BASE_REL}problems/{slug}.html">'
+        f'<span class="zh">{zh}</span><span class="en">{en}</span></a>'
+        for slug, zh, en in quick
+    )
 
     body = f"""<div class="container">
 <header class="site">
   <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
-  <nav class="top"><a href="{APP_URL}">Get the App</a></nav>
+  <nav class="top"><a href="{APP_URL}"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
 {hero}
-<div class="list-group"><h3>困住的时候 · When You Are Stuck</h3>
-<p class="sub-pain">睡不着、焦虑、想辞职、失恋、拖延——每个具体处境，都有一章对得上。</p>
-<div class="grid">
-  <a href="{BASE_REL}problems/anxiety.html">焦虑</a><a href="{BASE_REL}problems/cant-sleep.html">睡不着</a><a href="{BASE_REL}problems/quit-job.html">想辞职</a><a href="{BASE_REL}problems/heartbreak.html">失恋</a><a href="{BASE_REL}problems/procrastination.html">拖延</a><a href="{BASE_REL}problems/burnout.html">撑不住</a><a href="{BASE_REL}problems/comparison.html">爱比较</a><a href="{BASE_REL}problems/index.html">全部 20 个 →</a>
-</div></div>
+<div class="list-group"><h3><span class="zh">困住的时候</span><span class="en">When You Are Stuck</span></h3>
+<p class="sub-pain"><span class="zh">睡不着、焦虑、想辞职、失恋、拖延——每个具体处境，都有一章对得上。</span><span class="en">Can't sleep, anxious, thinking of quitting, heartbroken, stuck. Each situation has a chapter that answers it.</span></p>
+<div class="grid">{quick_links}</div></div>
 {''.join(groups_html)}
 <div class="cta">
-  <a class="btn" href="{APP_URL}">Get one verse a day with {APP_NAME} →</a>
-  <p>Daily Tao Te Ching verses, reflections and journaling.</p>
+  <a class="btn" href="{APP_URL}"><span class="zh">每天一句经文，装进口袋 →</span><span class="en">Get one verse a day with {APP_NAME} →</span></a>
+  <p><span class="zh">每日经文、反思与修行记录。</span><span class="en">Daily verses, reflections and journaling.</span></p>
 </div>
 <footer class="site">
   <span>© 2026 {APP_NAME}</span>
-  <span><a href="{BASE_REL}sitemap.xml">Sitemap</a></span>
+  <span><a href="{BASE_REL}sitemap.xml"><span class="zh">站点地图</span><span class="en">Sitemap</span></a></span>
 </footer>
 </div>"""
     return page_shell(
@@ -354,108 +406,124 @@ def build_index(content):
 
 
 def build_source_index(source, items):
+    """某部经的目录页：双语。"""
     meta = SOURCE_META[source]
     items = seq_list(source, items)
+
+    def span(zh, en):
+        return f'<span class="zh">{esc(zh)}</span><span class="en">{esc(en)}</span>'
+
     links = []
     for c in items:
         seq = entry_seq(c)
         if source in ("Tao Te Ching", "Diamond Sutra"):
-            label = f"{meta['title']} Chapter {chapter_num(c.get('chapter'))}"
+            zh_label = f"第{seq}{meta['zhUnit']}"
+            en_label = f"Chapter {seq}"
         else:
-            label = c.get("chapter") or f"{meta['zh']} {seq}"
-        links.append(f'<a href="chapter-{seq}.html">{esc(label)}</a>')
-    if source in ("Tao Te Ching", "Diamond Sutra"):
-        h1 = f"{meta['title']} — All {len(items)} Chapters <span class=\"zh-tag\">· {esc(meta['zh'])}</span>"
-    else:
-        h1 = f"{esc(meta['zh'])} · 全 {len(items)} {meta['zhUnit']} <span class=\"zh-tag\">· {esc(meta['title'])}</span>"
+            zh_label = c.get("chapter") or f"{meta['zh']} {seq}"
+            en_label = c.get("chapter_en") or zh_label
+        links.append(f'<a href="chapter-{seq}.html">{span(zh_label, en_label)}</a>')
+
+    n = len(items)
+    zh_h1 = f"{meta['zh']} · 全 {n} {meta['zhUnit']}"
+    en_h1 = f"{meta['title']} · All {n} chapters"
+
     body = f"""<div class="container">
 <header class="site">
   <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
-  <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
+  <nav class="top"><a href="{BASE_REL}index.html">{span("全部经文", "All Chapters")}</a><a href="{APP_URL}">{span("下载 App", "Get the App")}</a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › {meta['title']}</p>
-<h1>{h1}</h1>
+<p class="crumb"><a href="{BASE_REL}index.html">{span("首页", "Home")}</a> › {span(meta['zh'], meta['title'])}</p>
+<h1>{span(zh_h1, en_h1)}</h1>
 <div class="grid">{"".join(links)}</div>
 <div class="cta">
-  <a class="btn" href="{APP_URL}">Get one verse a day with {APP_NAME} →</a>
-  <p>Daily Tao Te Ching verses, reflections and journaling.</p>
+  <a class="btn" href="{APP_URL}">{span("每天一句经文，装进口袋 →", "Get one verse a day with " + APP_NAME + " →")}</a>
+  <p>{span("每日经文、反思与修行记录。", "Daily verses, reflections and journaling.")}</p>
 </div>
 </div>"""
     return page_shell(
-        f"{meta['zh']} · 全 {len(items)} {meta['zhUnit']}原文精讲 | {APP_NAME}",
-        f"{meta['zh']}全 {len(items)} {meta['zhUnit']}原文 + 一句导读。完整白话精讲与每日修习在 TaoMind App。",
+        f"{meta['zh']} · 全 {n} {meta['zhUnit']}原文精讲 | {APP_NAME}",
+        f"{meta['zh']}全 {n} {meta['zhUnit']}原文 + 一句导读。完整白话精讲与每日修习在 TaoMind App。",
         SITE_URL + slugify_source(source) + "/",
         body,
     )
 
 
 def build_problem_page(p, ttc_by_num, all_problems):
-    """问题型落地页：用户搜的是处境，不是章号。
+    """问题型落地页：处境标题 → 共鸣 → 经文 → 老子怎么说 → 今天就做一件事 → 下载。
 
-    结构：处境标题 → 共鸣 → 经文 → 老子怎么说 → 今天做一件事 → 下载。
-    经文原文来自公共领域通行本；解读自写，不搬学者译文。
+    全文双语。经文优先给英文译文（verse_text_en），没有才回落中文原文。
     """
     num = p["chapter"]
     entry = ttc_by_num.get(num) or {}
-    verse = (entry.get("verse_text") or "").strip()
+    zh_verse = (entry.get("verse_text") or "").strip()
+    en_verse = (entry.get("verse_text_en") or "").strip() or zh_verse
     ch_name = entry.get("chapter") or f"第{num}章"
+    ch_name_en = entry.get("chapter_en") or f"Chapter {num}"
 
     canonical = SITE_URL + f"problems/{p['slug']}.html"
     title = f"{p['h1']}｜道德经第{num}章怎么说 | {APP_NAME}"
     description = f"{p['pain']}《道德经》{ch_name}给的答案：{p['quote_note']}。"
 
-    # 同类问题互链，提高站内爬取与停留
+    def span(zh, en):
+        return f'<span class="zh">{esc(zh)}</span><span class="en">{esc(en)}</span>'
+
+    # 同类问题互链
     others = [x for x in all_problems if x["slug"] != p["slug"]][:6]
     other_links = "".join(
-        f'<a href="{x["slug"]}.html">{esc(x["h1"])}</a>' for x in others
+        f'<a href="{x["slug"]}.html">{span(x["h1"], x["h1_en"])}</a>' for x in others
     )
 
     body = f"""<div class="container">
 <header class="site">
   <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
-  <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
+  <nav class="top"><a href="{BASE_REL}index.html">{span("全部经文", "All Chapters")}</a><a href="{APP_URL}">{span("下载 App", "Get the App")}</a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › 困住的时候</p>
-<h1>{esc(p['h1'])}</h1>
-<p class="sub-pain">{esc(p['pain'])}</p>
-<blockquote class="verse">{esc(verse)}<span class="verse-src">——《道德经》{esc(ch_name)}</span></blockquote>
-<h2>老子怎么说</h2>
-<div class="commentary"><p>{esc(p['insight'])}</p></div>
-<div class="keyline">{esc(p['quote_note'])}</div>
-<h2>今天可以做的一件事</h2>
-<div class="action-box">{esc(p['action'])}</div>
+<p class="crumb"><a href="{BASE_REL}index.html">{span("首页", "Home")}</a> › <a href="index.html">{span("困住的时候", "When You Are Stuck")}</a></p>
+<h1>{span(p['h1'], p['h1_en'])}</h1>
+<p class="sub-pain">{span(p['pain'], p['pain_en'])}</p>
+<blockquote class="verse"><span class="zh">{esc(zh_verse)}</span><span class="en">{esc(en_verse)}</span><span class="verse-src">{span("——《道德经》" + ch_name, "— Tao Te Ching, " + ch_name_en)}</span></blockquote>
+<h2>{span("老子怎么说", "What Lao Tzu says")}</h2>
+<div class="commentary"><p>{span(p['insight'], p['insight_en'])}</p></div>
+<div class="keyline">{span(p['quote_note'], p['quote_note_en'])}</div>
+<h2>{span("今天可以做的一件事", "One thing to do today")}</h2>
+<div class="action-box">{span(p['action'], p['action_en'])}</div>
 <div class="cta">
-  <a class="btn" href="{APP_URL}">把这个方法装进手机 →</a>
-  <p>{APP_NAME}：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。</p>
+  <a class="btn" href="{APP_URL}">{span("把这个方法装进手机 →", "Put this in your pocket →")}</a>
+  <p>{span(APP_NAME + "：写下你的处境，给你对症的那一章，每天一句，连续打卡 7 天免费得 7 天 Pro。", APP_NAME + ": describe your situation, get the chapter that fits, one verse a day. Seven days in a row earns a week of Pro.")}</p>
 </div>
 <div class="list-group">
-  <h3>也许你还在困扰</h3>
+  <h3>{span("也许你还在困扰", "You might also be stuck on")}</h3>
   <div class="grid">{other_links}</div>
 </div>
 <footer class="site">
   <span>© 2026 {APP_NAME}</span>
-  <span><a href="{BASE_REL}index.html">全部经文</a></span>
+  <span><a href="{BASE_REL}index.html">{span("全部经文", "All chapters")}</a></span>
 </footer>
 </div>"""
     return page_shell(title, description, canonical, body)
 
 
 def build_problems_index(problems):
+    """问题索引页：双语。"""
+    def span(zh, en):
+        return f'<span class="zh">{esc(zh)}</span><span class="en">{esc(en)}</span>'
+
     links = "".join(
-        f'<a href="{p["slug"]}.html">{esc(p["h1"])}</a>' for p in problems
+        f'<a href="{p["slug"]}.html">{span(p["h1"], p["h1_en"])}</a>' for p in problems
     )
     body = f"""<div class="container">
 <header class="site">
   <a class="logo" href="{BASE_REL}index.html"><img src="{BASE_REL}favicon.png" alt="" />{APP_NAME}</a>
-  <nav class="top"><a href="{BASE_REL}index.html">All Chapters</a><a href="{APP_URL}">Get the App</a></nav>
+  <nav class="top"><a href="{BASE_REL}index.html">{span("全部经文", "All Chapters")}</a><a href="{APP_URL}">{span("下载 App", "Get the App")}</a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="{BASE_REL}index.html">Home</a> › 困住的时候</p>
-<h1>困住的时候，古人怎么说</h1>
-<p class="sub-pain">睡不着、想辞职、放不下、怕失败——每一个具体处境，都有一章经文对得上。</p>
+<p class="crumb"><a href="{BASE_REL}index.html">{span("首页", "Home")}</a> › {span("困住的时候", "When You Are Stuck")}</p>
+<h1>{span("困住的时候，古人怎么说", "When you're stuck, what the old texts say")}</h1>
+<p class="sub-pain">{span("睡不着、想辞职、放不下、怕失败——每一个具体处境，都有一章经文对得上。", "Can't sleep, want to quit, can't let go, afraid to fail. Each situation has a chapter that answers it.")}</p>
 <div class="grid">{links}</div>
 <div class="cta">
-  <a class="btn" href="{APP_URL}">写下你的处境，让 {APP_NAME} 给你找那一章 →</a>
-  <p>道德经 81 章 + 金刚经 32 品，中英双语，每日一签。</p>
+  <a class="btn" href="{APP_URL}">{span("写下你的处境，让 " + APP_NAME + " 给你找那一章 →", "Describe your situation and let " + APP_NAME + " find the chapter →")}</a>
+  <p>{span("道德经 81 章 + 金刚经 32 品，中英双语，每日一签。", "81 chapters of the Tao Te Ching, 32 of the Diamond Sutra, bilingual, one verse a day.")}</p>
 </div>
 </div>"""
     return page_shell(
@@ -467,6 +535,10 @@ def build_problems_index(problems):
 
 
 def main():
+    # BASE_REL 是页面里所有站内链接/图标的相对前缀。
+    # 根目录页面用 ""，子目录页面（tao-te-ching/ 等、problems/）必须用 "../"，
+    # 否则 favicon 和导航会指向 /library/ problems/favicon.png 这种不存在的路径。
+    global BASE_REL
     content = load_content()
     from problems_data import PROBLEMS
     try:
@@ -479,7 +551,8 @@ def main():
     os.makedirs(os.path.join(OUT_DIR, "tao-te-ching"), exist_ok=True)
     os.makedirs(os.path.join(OUT_DIR, "diamond-sutra"), exist_ok=True)
 
-    # index
+    # index（根目录 → 相对前缀为空）
+    BASE_REL = ""
     with io.open(os.path.join(OUT_DIR, "index.html"), "w", encoding="utf-8") as f:
         f.write(build_index(content))
 
@@ -491,6 +564,7 @@ def main():
         items.sort(key=entry_seq)
 
     urls = []
+    BASE_REL = "../"          # 以下全部是子目录页面
 
     for source, items in by_source.items():
         sub = os.path.join(OUT_DIR, slugify_source(source))
@@ -553,11 +627,6 @@ def main():
     with io.open(os.path.join(OUT_DIR, ".nojekyll"), "w", encoding="utf-8") as f:
         f.write("")
 
-    # CNAME：GitHub Pages 自定义域。必须每次生成都写 —— main() 开头会 rmtree(site)，
-    # 手动放进去的 CNAME 下一次生成就没了，Pages 会掉回 github.io 域。
-    # 与仓库 Settings → Pages 里的 Custom domain 互为双保险。
-    with io.open(os.path.join(OUT_DIR, "CNAME"), "w", encoding="utf-8") as f:
-        f.write("library.taomindapp.com\n")
 
     print(f"Generated {len(content)} chapter pages + index + sitemap in {OUT_DIR}")
 

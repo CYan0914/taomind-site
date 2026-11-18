@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function(){
+  var l = null;
+  try { l = localStorage.getItem('tm-lang'); } catch(e){}
+  if (!l) l = ((navigator.language||'en').toLowerCase().indexOf('zh')===0) ? 'zh' : 'en';
+  document.documentElement.setAttribute('data-lang', l);
+})();
+function setLang(l){
+  document.documentElement.setAttribute('data-lang', l);
+  try { localStorage.setItem('tm-lang', l); } catch(e){}
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>金刚经 · 全 32 品原文精讲 | TaoMind</title>
 <meta name="description" content="金刚经全 32 品原文 + 一句导读。完整白话精讲与每日修习在 TaoMind App。" />
-<link rel="canonical" href="https://library.taomindapp.com/diamond-sutra/" />
+<link rel="canonical" href="https://www.taomindapp.com/library/diamond-sutra/" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="金刚经 · 全 32 品原文精讲 | TaoMind" />
 <meta property="og:description" content="金刚经全 32 品原文 + 一句导读。完整白话精讲与每日修习在 TaoMind App。" />
-<meta property="og:url" content="https://library.taomindapp.com/diamond-sutra/" />
-<link rel="icon" href="favicon.png" type="image/png" />
+<meta property="og:url" content="https://www.taomindapp.com/library/diamond-sutra/" />
+<link rel="icon" href="../favicon.png" type="image/png" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -18,7 +30,7 @@
   "headline": "金刚经 · 全 32 品原文精讲 | TaoMind",
   "description": "金刚经全 32 品原文 + 一句导读。完整白话精讲与每日修习在 TaoMind App。",
   "publisher": {"@type": "Organization", "name": "TaoMind"},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://library.taomindapp.com/diamond-sutra/"}
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://www.taomindapp.com/library/diamond-sutra/"}
 }
 </script>
 <style>
@@ -34,10 +46,10 @@ nav.top a { color:var(--accent); text-decoration:none; font-size:.9rem; margin-l
 .crumb a { color:var(--muted); text-decoration:none; }
 h1 { font-size:2rem; line-height:1.25; margin:.4rem 0 .6rem; }
 .zh-tag { color:var(--muted); font-weight:400; font-size:1.05rem; }
-.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:italic; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
+.verse { font-family:Georgia,'Times New Roman',serif; font-size:1.45rem; line-height:1.6; font-style:normal; font-weight:600; color:#33302a; background:#f1ede1; border-left:4px solid var(--accent); padding:1.4rem 1.6rem; border-radius:0 8px 8px 0; margin:1.8rem 0; }
 h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing:.02em; }
 .commentary p { margin:.5rem 0; }
-.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:italic; color:#44403a; }
+.reflect { background:#f1ede1; border-radius:8px; padding:1.2rem 1.4rem; font-style:normal; color:#44403a; }
 .pager { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); font-size:.9rem; }
 .pager a { color:var(--accent); text-decoration:none; max-width:45%; }
 .pager .next { text-align:right; }
@@ -53,20 +65,27 @@ h2 { font-size:1.15rem; margin:2rem 0 .5rem; color:var(--accent); letter-spacing
 .hero h1 { font-size:2.3rem; }
 .hero p { color:var(--muted); max-width:560px; margin:.4rem auto 0; }
 footer.site { margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+/* 双语切换：只显示当前语言那一套 */
+html[data-lang="zh"] .en { display:none !important; }
+html[data-lang="en"] .zh { display:none !important; }
+.lang-sw { display:inline-flex; gap:4px; margin-left:12px; vertical-align:middle; }
+.lang-sw button { background:none; border:1px solid var(--line); border-radius:6px; padding:2px 9px; font-size:12px; cursor:pointer; color:var(--muted); font-family:inherit; }
+html[data-lang="zh"] .lang-sw [data-lang="zh"],
+html[data-lang="en"] .lang-sw [data-lang="en"] { background:var(--accent); color:#fff; border-color:var(--accent); }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="site">
-  <a class="logo" href="index.html"><img src="favicon.png" alt="" />TaoMind</a>
-  <nav class="top"><a href="index.html">All Chapters</a><a href="https://apps.apple.com/app/id6792008756">Get the App</a></nav>
+  <a class="logo" href="../index.html"><img src="../favicon.png" alt="" />TaoMind</a>
+  <nav class="top"><a href="../index.html"><span class="zh">全部经文</span><span class="en">All Chapters</span></a><a href="https://apps.apple.com/app/id6792008756"><span class="zh">下载 App</span><span class="en">Get the App</span></a><span class="lang-sw"><button data-lang="zh" onclick="setLang('zh')">中</button><button data-lang="en" onclick="setLang('en')">EN</button></span></nav>
 </header>
-<p class="crumb"><a href="index.html">Home</a> › Diamond Sutra</p>
-<h1>Diamond Sutra — All 32 Chapters <span class="zh-tag">· 金刚经</span></h1>
-<div class="grid"><a href="chapter-82.html">Diamond Sutra Chapter None</a><a href="chapter-83.html">Diamond Sutra Chapter None</a><a href="chapter-84.html">Diamond Sutra Chapter None</a><a href="chapter-85.html">Diamond Sutra Chapter None</a><a href="chapter-86.html">Diamond Sutra Chapter None</a><a href="chapter-87.html">Diamond Sutra Chapter None</a><a href="chapter-88.html">Diamond Sutra Chapter None</a><a href="chapter-89.html">Diamond Sutra Chapter None</a><a href="chapter-90.html">Diamond Sutra Chapter None</a><a href="chapter-91.html">Diamond Sutra Chapter None</a><a href="chapter-92.html">Diamond Sutra Chapter None</a><a href="chapter-93.html">Diamond Sutra Chapter None</a><a href="chapter-94.html">Diamond Sutra Chapter None</a><a href="chapter-95.html">Diamond Sutra Chapter None</a><a href="chapter-96.html">Diamond Sutra Chapter None</a><a href="chapter-97.html">Diamond Sutra Chapter None</a><a href="chapter-98.html">Diamond Sutra Chapter None</a><a href="chapter-99.html">Diamond Sutra Chapter None</a><a href="chapter-100.html">Diamond Sutra Chapter None</a><a href="chapter-101.html">Diamond Sutra Chapter None</a><a href="chapter-102.html">Diamond Sutra Chapter None</a><a href="chapter-103.html">Diamond Sutra Chapter None</a><a href="chapter-104.html">Diamond Sutra Chapter None</a><a href="chapter-105.html">Diamond Sutra Chapter None</a><a href="chapter-106.html">Diamond Sutra Chapter None</a><a href="chapter-107.html">Diamond Sutra Chapter None</a><a href="chapter-108.html">Diamond Sutra Chapter None</a><a href="chapter-109.html">Diamond Sutra Chapter None</a><a href="chapter-110.html">Diamond Sutra Chapter None</a><a href="chapter-111.html">Diamond Sutra Chapter None</a><a href="chapter-112.html">Diamond Sutra Chapter None</a><a href="chapter-113.html">Diamond Sutra Chapter None</a></div>
+<p class="crumb"><a href="../index.html"><span class="zh">首页</span><span class="en">Home</span></a> › <span class="zh">金刚经</span><span class="en">Diamond Sutra</span></p>
+<h1><span class="zh">金刚经 · 全 32 品</span><span class="en">Diamond Sutra · All 32 chapters</span></h1>
+<div class="grid"><a href="chapter-82.html"><span class="zh">第82品</span><span class="en">Chapter 82</span></a><a href="chapter-83.html"><span class="zh">第83品</span><span class="en">Chapter 83</span></a><a href="chapter-84.html"><span class="zh">第84品</span><span class="en">Chapter 84</span></a><a href="chapter-85.html"><span class="zh">第85品</span><span class="en">Chapter 85</span></a><a href="chapter-86.html"><span class="zh">第86品</span><span class="en">Chapter 86</span></a><a href="chapter-87.html"><span class="zh">第87品</span><span class="en">Chapter 87</span></a><a href="chapter-88.html"><span class="zh">第88品</span><span class="en">Chapter 88</span></a><a href="chapter-89.html"><span class="zh">第89品</span><span class="en">Chapter 89</span></a><a href="chapter-90.html"><span class="zh">第90品</span><span class="en">Chapter 90</span></a><a href="chapter-91.html"><span class="zh">第91品</span><span class="en">Chapter 91</span></a><a href="chapter-92.html"><span class="zh">第92品</span><span class="en">Chapter 92</span></a><a href="chapter-93.html"><span class="zh">第93品</span><span class="en">Chapter 93</span></a><a href="chapter-94.html"><span class="zh">第94品</span><span class="en">Chapter 94</span></a><a href="chapter-95.html"><span class="zh">第95品</span><span class="en">Chapter 95</span></a><a href="chapter-96.html"><span class="zh">第96品</span><span class="en">Chapter 96</span></a><a href="chapter-97.html"><span class="zh">第97品</span><span class="en">Chapter 97</span></a><a href="chapter-98.html"><span class="zh">第98品</span><span class="en">Chapter 98</span></a><a href="chapter-99.html"><span class="zh">第99品</span><span class="en">Chapter 99</span></a><a href="chapter-100.html"><span class="zh">第100品</span><span class="en">Chapter 100</span></a><a href="chapter-101.html"><span class="zh">第101品</span><span class="en">Chapter 101</span></a><a href="chapter-102.html"><span class="zh">第102品</span><span class="en">Chapter 102</span></a><a href="chapter-103.html"><span class="zh">第103品</span><span class="en">Chapter 103</span></a><a href="chapter-104.html"><span class="zh">第104品</span><span class="en">Chapter 104</span></a><a href="chapter-105.html"><span class="zh">第105品</span><span class="en">Chapter 105</span></a><a href="chapter-106.html"><span class="zh">第106品</span><span class="en">Chapter 106</span></a><a href="chapter-107.html"><span class="zh">第107品</span><span class="en">Chapter 107</span></a><a href="chapter-108.html"><span class="zh">第108品</span><span class="en">Chapter 108</span></a><a href="chapter-109.html"><span class="zh">第109品</span><span class="en">Chapter 109</span></a><a href="chapter-110.html"><span class="zh">第110品</span><span class="en">Chapter 110</span></a><a href="chapter-111.html"><span class="zh">第111品</span><span class="en">Chapter 111</span></a><a href="chapter-112.html"><span class="zh">第112品</span><span class="en">Chapter 112</span></a><a href="chapter-113.html"><span class="zh">第113品</span><span class="en">Chapter 113</span></a></div>
 <div class="cta">
-  <a class="btn" href="https://apps.apple.com/app/id6792008756">Get one verse a day with TaoMind →</a>
-  <p>Daily Tao Te Ching verses, reflections and journaling.</p>
+  <a class="btn" href="https://apps.apple.com/app/id6792008756"><span class="zh">每天一句经文，装进口袋 →</span><span class="en">Get one verse a day with TaoMind →</span></a>
+  <p><span class="zh">每日经文、反思与修行记录。</span><span class="en">Daily verses, reflections and journaling.</span></p>
 </div>
 </div>
 </body>
