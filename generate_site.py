@@ -17,6 +17,7 @@ ICON_PATH = r"C:\Users\Cyan\Desktop\TaoMind-iOS\Resources\Assets.xcassets\AppIco
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUT_DIR = os.path.join(BASE_DIR, "site")
+INDEXNOW_KEY = "aeb5fcba64f42c808a8f3ec175d4ae15ada0"  # IndexNow (Bing) ownership key; served as <key>.txt at site root
 SITE_URL = "https://www.taomindapp.com/library/"
 
 APP_NAME = "TaoMind"
@@ -548,6 +549,8 @@ def main():
         # Windows 文件锁（浏览器仍持有句柄）：降级为覆盖写入
         pass
     os.makedirs(OUT_DIR, exist_ok=True)
+    with io.open(os.path.join(OUT_DIR, INDEXNOW_KEY + ".txt"), "w", encoding="utf-8") as f:
+        f.write(INDEXNOW_KEY)
     os.makedirs(os.path.join(OUT_DIR, "tao-te-ching"), exist_ok=True)
     os.makedirs(os.path.join(OUT_DIR, "diamond-sutra"), exist_ok=True)
 
